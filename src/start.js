@@ -4,21 +4,17 @@ import ReactDOM from "react-dom";
 
 // import Register from "./Register";
 import Welcome from "./Welcome";
-// import Logo from "./Logo";
+import Logo from "./Logo";
 
+let component;
 if (location.pathname == "/welcome") {
-    console.log("logged in");
-} else {
     console.log("loged out");
+    component = <Welcome />;
+} else {
+    component = <Logo />;
+    console.log("logged in");
 }
-ReactDOM.render(<Welcome />, document.getElementById("root"));
-
-// let component;
-// if (location.pathname == "/welcome") {
-//     component = <Welcome />;
-// } else {
-//     component = <Logo />;
-// }
+ReactDOM.render(component, document.getElementById("root"));
 
 // function Welcomme() {
 //     return (

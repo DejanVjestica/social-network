@@ -3,9 +3,9 @@ import axios from "./axios";
 
 // import axios from "axios";
 
-class Register extends React.Component {
-    constructor(props) {
-        super(props);
+class Register extends Component {
+    constructor() {
+        super();
         this.state = {
             firstName: "",
             lastName: "",
@@ -29,20 +29,20 @@ class Register extends React.Component {
         e.preventDefault();
 
         axios
-            .post("/welcome", this.state)
+            .post("/register", this.state)
             .then(resp => {
-                console.log(resp);
                 // location.replace("/");
 
-                // if (resp.data.success) {
-                //     console.log(this.state);
-                //     location.replace("/");
-                // } else {
-                //     console.log("error");
-                //     this.setState({
-                //         error: true
-                //     });
-                // }
+                console.log(resp);
+                if (resp.data.success) {
+                    console.log(this.state);
+                    location.replace("/");
+                } else {
+                    console.log("error");
+                    this.setState({
+                        error: true
+                    });
+                }
             })
             .catch(function(err) {
                 console.log(err);
@@ -57,17 +57,25 @@ class Register extends React.Component {
                         type="text"
                         name="firstName"
                         onChange={this.onChange}
+                        placeholder="first Name"
                     />
                     <input
                         type="text"
                         name="lastName"
                         onChange={this.onChange}
+                        placeholder="last Name"
                     />
-                    <input type="email" name="email" onChange={this.onChange} />
+                    <input
+                        type="email"
+                        name="email"
+                        onChange={this.onChange}
+                        placeholder="email"
+                    />
                     <input
                         type="password"
                         name="password"
                         onChange={this.onChange}
+                        placeholder="password"
                     />
                     <button>Register</button>
                 </form>
