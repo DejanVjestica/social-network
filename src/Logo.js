@@ -1,5 +1,6 @@
 import React from "react";
-export default function Logo() {
+
+function Logo() {
     return (
         <div>
             {/* <p>You are loged in</p> */}
@@ -8,3 +9,4 @@ export default function Logo() {
         </div>
     );
 }
+export default Logo;

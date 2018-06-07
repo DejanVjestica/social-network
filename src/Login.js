@@ -20,7 +20,7 @@ class Login extends Component {
                 [e.target.name]: e.target.value
             },
             () => {
-                console.log(this.state);
+                // console.log(this.state);
             }
         );
     }
@@ -30,9 +30,13 @@ class Login extends Component {
         axios
             .post("/login", this.state)
             .then(resp => {
-                console.log(resp);
-                //
-                location.replace("/");
+                if (resp.data.success) {
+                    location.replace("/");
+                } else {
+                    this.setState({
+                        error: true
+                    });
+                }
             })
             .catch(function(err) {
                 console.log(err);
@@ -42,6 +46,9 @@ class Login extends Component {
         return (
             <div>
                 <h2>Login</h2>
+                {this.state.error && (
+                    <div className="err"> oops login went wrong!</div>
+                )}
                 <form onSubmit={this.onSubmit} method="post">
                     <input type="email" name="email" onChange={this.onChange} />
                     <input

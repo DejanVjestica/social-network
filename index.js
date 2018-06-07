@@ -64,39 +64,35 @@ app.post("/register", function(req, res) {
     // console.log("userId ", req.session.userId);
     // userId = false;
     // req.session.userId = userId;
-    console.log("route /welcome req.body", req.body);
+    // console.log("route /welcome req.body", req.body);
     db
         .hashPassword(req.body.password)
         .then(function(hashedPassword) {
-            console.log("this is hashted pass", hashedPassword);
+            // console.log("this is hashted pass", hashedPassword);
             //
-            db
-                .registerUser(
-                    req.body.firstName,
-                    req.body.lastName,
-                    req.body.email,
-                    hashedPassword
-                )
-                .then(function(body) {
-                    console.log("in register user index.js");
-                    // console.log(body);
-                    let userId = body.rows[0].id;
-                    let firstName = req.body.firstName;
-                    let lastName = req.body.lastLast;
-                    let email = req.body.email;
-                    // setting cookie session
-                    req.session.userId = userId;
-                    req.session.firstName = firstName;
-                    req.session.lastName = lastName;
-                    req.session.email = email;
-                    res.redirect("/");
-                })
-                .catch(function(e) {
-                    console.log("register user: ", e);
-                });
+            return db.registerUser(
+                req.body.firstName,
+                req.body.lastName,
+                req.body.email,
+                hashedPassword
+            );
         })
-        .catch(function(e) {
-            console.log("/register: ", e);
+        .then(function(result) {
+            req.session.userId = result.rows[0].id;
+            req.session.firstName = req.body.firstName;
+            req.session.lastName = req.body.lastName;
+            // res.redirect("/");
+        })
+        .then(function() {
+            res.json({
+                success: true
+            });
+        })
+        .catch(function(err) {
+            console.log("/register: ", err);
+            res.json({
+                err: true
+            });
         });
     // if (req.session.userId) {
     //     res.redirect("/");
@@ -105,7 +101,56 @@ app.post("/register", function(req, res) {
     //     res.sendFile(__dirname + "/index.html");
     // }
 });
-
+app.post("/login", function(req, res) {
+    console.log("/login: ", req.body, req.body.email);
+    db
+        .getUserByEmail(req.body.email)
+        .then(function(user) {
+            console.log(
+                "getUserByEmail: ",
+                // user.rows,
+                req.body.password,
+                user.rows[0].hash_password
+            );
+            return db
+                .checkPassword(req.body.password, user.rows[0].hash_password)
+                .then(function(doesMatch) {
+                    console.log(req.body.password, user.rows[0].hash_password);
+                    if (doesMatch) {
+                        console.log("does match", user.rows);
+                        // throw new Error(
+                        //     console.log("login route after check password")
+                        // );
+                        req.session.userId = user.rows[0].userid;
+                        req.session.firstName = user.rows[0].firstName;
+                        req.session.lastName = user.rows[0].lastName;
+                        // res.redirect("/");
+                        res.json({
+                            success: true
+                        });
+                    } else {
+                        res.json({
+                            err: true
+                        });
+                    }
+                });
+        })
+        .catch(function(err) {
+            console.log("route login main catch/ login user: ", err);
+            res.json({
+                err: true
+            });
+        });
+});
+app.get("/logout", function(req, res) {
+    req.session = null;
+    // console.log("route /logout: ", req.session);
+    // res.redirect("/");
+    // res.json({
+    //     success: true
+    // });
+    res.redirect("/welcome");
+});
 // app.post("/login", (req, res) => {
 //     console.log(" /login: ", req.body);
 //     res.sendFile(__dirname + "/index.html");
@@ -117,9 +162,10 @@ app.post("/register", function(req, res) {
 // });
 app.get("/welcome", function(req, res) {
     if (req.session.userId) {
-        return res.redirect("/");
+        res.redirect("/");
+    } else {
+        res.sendFile(__dirname + "/index.html");
     }
-    res.sendFile(__dirname + "/index.html");
 });
 // Always last route
 app.get("*", function(req, res) {
@@ -136,3 +182,12 @@ app.get("*", function(req, res) {
 app.listen(8080, function() {
     console.log("I'm listening.");
 });
+
+// custom midleware --------------------------
+// function requireUserId(req, res, next) {
+//     if (req.session.userId) {
+//         res.redirect("/");
+//     } else {
+//         next();
+//     }
+// }

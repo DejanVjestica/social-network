@@ -7,10 +7,10 @@ class Register extends Component {
     constructor() {
         super();
         this.state = {
-            firstName: "",
-            lastName: "",
-            email: "",
-            password: ""
+            // firstName: "",
+            // lastName: "",
+            // email: "",
+            // password: ""
         };
         this.onChange = this.onChange.bind(this);
         this.onRegister = this.onRegister.bind(this);
@@ -21,7 +21,7 @@ class Register extends Component {
                 [e.target.name]: e.target.value
             },
             () => {
-                console.log(this.state);
+                // console.log(this.state);
             }
         );
     }
@@ -33,12 +33,12 @@ class Register extends Component {
             .then(resp => {
                 // location.replace("/");
 
-                console.log(resp);
+                // console.log(resp);
                 if (resp.data.success) {
-                    console.log(this.state);
+                    // console.log(this.state);
                     location.replace("/");
                 } else {
-                    console.log("error");
+                    // console.log("error");
                     this.setState({
                         error: true
                     });
@@ -51,6 +51,10 @@ class Register extends Component {
     render() {
         return (
             <div id="register">
+                {this.state.error && (
+                    <div className="err"> oops registration went wrong!</div>
+                )}
+
                 <form onSubmit={this.onRegister} method="post">
                     <h2>Please register</h2>
                     <input

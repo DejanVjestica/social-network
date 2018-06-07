@@ -48,12 +48,29 @@ exports.checkPassword = function(
 exports.registerUser = function(firstName, lastName, email, hashedPassword) {
     console.log(firstName, lastName, email, hashedPassword);
     return db.query(
-        `INSERT INTO users (firstName, lastName, email, hash_password)
-		VALUES ($1, $2, $3, $4) RETURNING *`,
-        [firstName, lastName, email, hashedPassword]
+        `
+		INSERT INTO users (firstName, lastName, email, hash_password)
+		VALUES ($1, $2, $3, $4) RETURNING *
+		`,
+        [
+            firstName || null,
+            lastName || null,
+            email || null,
+            hashedPassword || null
+        ]
     );
 };
 
+exports.getUserByEmail = function(email) {
+    return db.query(
+        `
+		SELECT firstName, lastName, hash_password, users.id as userId
+		FROM users
+		WHERE email = $1
+		`,
+        [email]
+    );
+};
 // exports.getUserByEmail = function(email) {
 //     return db.query(`SELECT * FROM users WHERE email = $1`, [email]);
 // `
@@ -63,18 +80,6 @@ exports.registerUser = function(firstName, lastName, email, hashedPassword) {
 // ON signatures.user_id = users.id
 // WHERE email = $1
 // `
-// };
-// exports.getUserByEmail = function(email) {
-//     return db.query(
-//         `
-// 		SELECT first, last, hash_password, users.id as user_id, signatures.id as sig_id
-// 		FROM users
-// 		LEFT JOIN signatures
-// 		ON signatures.user_id = users.id
-// 		WHERE email = $1
-// 		`,
-//         [email]
-//     );
 // };
 // exports.getSigIdByUserId = function(id) {
 //     return db.query(`SELECT * FROM signatures WHERE user_id = $1`, [id]);
