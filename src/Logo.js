@@ -1,10 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Logo() {
     return (
         <div>
-            {/* <p>You are loged in</p> */}
-            {/* <p>Component logo</p> */}
             <img src="/images/logo.jpg" />
         </div>
     );

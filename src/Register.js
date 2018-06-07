@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from "./axios";
+import { Link } from "react-router-dom";
 
 // import axios from "axios";
 
@@ -51,6 +52,9 @@ class Register extends Component {
     render() {
         return (
             <div id="register">
+                {location.pathname == "/welcome" && (
+                    <Link to="/login">Login</Link>
+                )}
                 {this.state.error && (
                     <div className="err"> oops registration went wrong!</div>
                 )}

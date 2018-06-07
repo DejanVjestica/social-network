@@ -4,14 +4,16 @@ import ReactDOM from "react-dom";
 
 // import Register from "./Register";
 import Welcome from "./Welcome";
-import Logo from "./Logo";
+// import Logo from "./logo";
+import App from "./App";
 
 let component;
 if (location.pathname == "/welcome") {
     console.log("loged out");
     component = <Welcome />;
 } else {
-    component = <Logo />;
+    component = <App />;
+    // component = <Logo />;
     console.log("logged in");
 }
 ReactDOM.render(component, document.getElementById("root"));

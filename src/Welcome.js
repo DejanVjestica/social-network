@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { HashRouter, Route, Link } from "react-router-dom";
+import { HashRouter, Route } from "react-router-dom";
 // import { HashRouter, Route, Link }from
 import Register from "./register";
 import Login from "./login";
@@ -10,20 +10,21 @@ class Welcome extends Component {
     render() {
         return (
             <div>
-                <header>{/* <Logo /> */}</header>
+                <header>
+                    <h2>Pet book</h2>
+                    {/* <Logo /> */}
+                </header>
+                <p>Get to know felow camarades</p>
                 <HashRouter>
                     <div>
-                        {/* <Link to="/">Home</Link> */}
-                        {location.pathname != "/login" && (
-                            <Link to="/login">Login</Link>
-                        )}
                         <Route exact path="/" component={Register} />
                         <Route path="/login" component={Login} />
+                        {/* <Link to="/">Home</Link> */}
+                        {/* {location.pathname != "/welcome/login" && (
+                            <Link to="/login">Login</Link>
+                        )} */}
                     </div>
                 </HashRouter>
-                {/* <h2>Welcome to</h2> */}
-                <h2>Pet book</h2>
-                <p>Get to know felow camarades</p>
             </div>
         );
     }

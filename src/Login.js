@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
+
 import axios from "./axios";
 
 // import Register from "./register";
@@ -46,6 +48,9 @@ class Login extends Component {
         return (
             <div>
                 <h2>Login</h2>
+                {location.pathname == "/login" && (
+                    <Link to="/welcome">Register</Link>
+                )}
                 {this.state.error && (
                     <div className="err"> oops login went wrong!</div>
                 )}
