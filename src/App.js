@@ -7,27 +7,42 @@ import Logo from "./logo";
 class App extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            firstName: "",
+            lastName: "",
+            userid: ""
+        };
         // this.showUploader = this.showUploader.bind(this);
         // this.showUploader = this.showUploader.bind(this);
     }
     componentDidMount() {
-        axios.get("/user").then(({ data }) => {
-            this.setState({
-                first: data.first,
-                last: data.last,
-                profilePic: data.profilePic,
-                id: data.id
+        axios
+            .get("/user")
+            .then(({ data }) => {
+                console.log(data);
+                // console.log(this.state.firstName, this.state.lastName);
+                this.setState(
+                    {
+                        firstName: data.firstname,
+                        lastName: data.lastname,
+                        userid: data.id
+                    },
+                    () => {
+                        console.log(this.state);
+                    }
+                );
+            })
+            .catch(function(err) {
+                console.log(err);
             });
-        });
     }
     render() {
         return (
             <div>
                 <header>
                     <h2>Pet book</h2>
-                    <h2>{}</h2>
-                    <a href="./logout">Logout</a>
+                    <h2>Name: {this.state.firstName}</h2>
+                    <a href="/logout">Logout</a>
                     <Logo />
                 </header>
             </div>

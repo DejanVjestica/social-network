@@ -151,15 +151,19 @@ app.get("/logout", function(req, res) {
     // });
     res.redirect("/welcome");
 });
-// app.post("/login", (req, res) => {
-//     console.log(" /login: ", req.body);
-//     res.sendFile(__dirname + "/index.html");
-//     // res.send("yes");
-//     // 1. get hash from DB based on email
-//     // 2.use bcript to compare the palin text passwort to the hash from db
-//     // 3. if returns true then set session ingo and send res.json() s ackerr msg
-
-// });
+app.get("/user", function(req, res) {
+    db
+        .getUserById(req.session.userId)
+        .then(function(user) {
+            // console.log(req.session.userid);
+            res.json(user.rows[0]);
+            // console.log(user.rows);
+        })
+        .catch(function(err) {
+            res.sendStatus(404);
+            console.log(err);
+        });
+});
 app.get("/welcome", function(req, res) {
     if (req.session.userId) {
         res.redirect("/");

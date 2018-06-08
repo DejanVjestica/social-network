@@ -71,6 +71,17 @@ exports.getUserByEmail = function(email) {
         [email]
     );
 };
+exports.getUserById = function(userId) {
+    console.log(userId);
+    return db.query(
+        `
+		SELECT firstName, lastName, id
+		FROM users
+		WHERE id = $1
+		`,
+        [userId]
+    );
+};
 // exports.getUserByEmail = function(email) {
 //     return db.query(`SELECT * FROM users WHERE email = $1`, [email]);
 // `
