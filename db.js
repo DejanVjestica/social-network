@@ -45,41 +45,43 @@ exports.checkPassword = function(
 // ========================================================
 // ================ Login and Registration ================
 // ========================================================
-exports.registerUser = function(firstName, lastName, email, hashedPassword) {
-    console.log(firstName, lastName, email, hashedPassword);
+exports.registerUser = function(first, last, email, hashedPassword) {
+    console.log("exports.registerUser", first, last, email, hashedPassword);
     return db.query(
         `
-		INSERT INTO users (firstName, lastName, email, hash_password)
+		INSERT INTO users (first, last, email, hash_password)
 		VALUES ($1, $2, $3, $4) RETURNING *
 		`,
-        [
-            firstName || null,
-            lastName || null,
-            email || null,
-            hashedPassword || null
-        ]
+        [first || null, last || null, email || null, hashedPassword || null]
     );
 };
 
 exports.getUserByEmail = function(email) {
     return db.query(
         `
-		SELECT firstName, lastName, hash_password, users.id as userId
+		SELECT first, last, hash_password, users.id as userId, image
 		FROM users
 		WHERE email = $1
 		`,
         [email]
     );
 };
+// is Loged in----------------------------------------
 exports.getUserById = function(userId) {
     console.log(userId);
     return db.query(
         `
-		SELECT firstName, lastName, id
+		SELECT first, last, image
 		FROM users
 		WHERE id = $1
 		`,
         [userId]
+    );
+};
+exports.updateProfileImage = function(userId, image) {
+    return db.query(
+        `UPDATE users SET image = $2 WHERE id = $1 RETURNING image`,
+        [userId || null, image]
     );
 };
 // exports.getUserByEmail = function(email) {

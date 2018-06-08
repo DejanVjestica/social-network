@@ -8,10 +8,10 @@ class Register extends Component {
     constructor() {
         super();
         this.state = {
-            // firstName: "",
-            // lastName: "",
-            // email: "",
-            // password: ""
+            first: "",
+            last: "",
+            email: "",
+            password: ""
         };
         this.onChange = this.onChange.bind(this);
         this.onRegister = this.onRegister.bind(this);
@@ -63,13 +63,13 @@ class Register extends Component {
                     <h2>Please register</h2>
                     <input
                         type="text"
-                        name="firstName"
+                        name="first"
                         onChange={this.onChange}
                         placeholder="first Name"
                     />
                     <input
                         type="text"
-                        name="lastName"
+                        name="last"
                         onChange={this.onChange}
                         placeholder="last Name"
                     />

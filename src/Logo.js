@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 
 function Logo() {
     return (
-        <div>
-            <img src="/images/logo.jpg" />
+        <div className="logo">
+            <Link to="/">
+                <img src="/images/logo.jpg" />
+            </Link>
         </div>
     );
 }

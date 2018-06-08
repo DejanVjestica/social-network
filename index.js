@@ -2,12 +2,39 @@ const express = require("express");
 const app = express();
 const compression = require("compression");
 
-// csurf
+// csurf -----------------------------------------------
 const cookieSession = require("cookie-session");
 const bodyParser = require("body-parser");
 const csurf = require("csurf");
 const pathPublic = "public";
 const db = require("./db");
+
+// Uploading files ---------------------------------------
+const s3 = require("./s3");
+
+const config = require("./config");
+const multer = require("multer");
+const uidSafe = require("uid-safe");
+const path = require("path");
+
+const diskStorage = multer.diskStorage({
+    destination: function(req, file, callback) {
+        callback(null, __dirname + "/uploads");
+    },
+    filename: function(req, file, callback) {
+        uidSafe(24).then(function(uid) {
+            callback(null, uid + path.extname(file.originalname));
+        });
+    }
+});
+
+const uploader = multer({
+    storage: diskStorage,
+    limits: {
+        fileSize: 2097152
+    }
+});
+//---------------------------------------------------
 
 // const csurf = require("csurf");
 // cookie parser ---------------------------------------
@@ -32,12 +59,6 @@ app.use(function(req, res, next) {
     res.cookie("mytoken", req.csrfToken());
     next();
 });
-
-// app.use(csurf());
-// const cookieSession = require("cookie_session");
-// setup cookies
-// app.use(cookieSession());
-
 // This midlewhare is compresing data
 app.use(compression());
 
@@ -71,16 +92,16 @@ app.post("/register", function(req, res) {
             // console.log("this is hashted pass", hashedPassword);
             //
             return db.registerUser(
-                req.body.firstName,
-                req.body.lastName,
+                req.body.first,
+                req.body.last,
                 req.body.email,
                 hashedPassword
             );
         })
         .then(function(result) {
             req.session.userId = result.rows[0].id;
-            req.session.firstName = req.body.firstName;
-            req.session.lastName = req.body.lastName;
+            req.session.firstName = req.body.first;
+            req.session.lastName = req.body.last;
             // res.redirect("/");
         })
         .then(function() {
@@ -164,6 +185,22 @@ app.get("/user", function(req, res) {
             console.log(err);
         });
 });
+// -----------------------------------------
+app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {
+    db
+        .updateProfileImage(
+            req.session.userId,
+            config.s3Url + req.file.filename
+        )
+        .then(function(result) {
+            res.json(result.rows[0].image);
+        })
+        .catch(function(err) {
+            console.log("error in upload", err);
+        });
+    console.log("Image uploaded successfully");
+});
+// --------------------------------------------------
 app.get("/welcome", function(req, res) {
     if (req.session.userId) {
         res.redirect("/");

@@ -19,10 +19,6 @@ class Welcome extends Component {
                     <div>
                         <Route exact path="/" component={Register} />
                         <Route path="/login" component={Login} />
-                        {/* <Link to="/">Home</Link> */}
-                        {/* {location.pathname != "/welcome/login" && (
-                            <Link to="/login">Login</Link>
-                        )} */}
                     </div>
                 </HashRouter>
             </div>
