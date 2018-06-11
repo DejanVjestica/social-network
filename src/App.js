@@ -6,6 +6,7 @@ import axios from "axios";
 import Logo from "./logo";
 import ProfilePic from "./ProfilePic";
 import Profile from "./Profile";
+import OtherPersonProfile from "./oop";
 // import Uploader from "./Uploader";
 
 class App extends Component {
@@ -29,7 +30,7 @@ class App extends Component {
         axios
             .get("/user")
             .then(({ data }) => {
-                console.log("componentDidMount data", data);
+                // console.log("componentDidMount data", data);
                 // console.log(this.state.firstName, this.state.lastName);
                 this.setState(
                     {
@@ -40,7 +41,7 @@ class App extends Component {
                         bio: data.bio
                     },
                     () => {
-                        console.log("componentDidMount state", this.state.bio);
+                        // console.log("componentDidMount state", this.state.bio);
                     }
                 );
             })
@@ -89,6 +90,9 @@ class App extends Component {
                 <div id="app">
                     <header>
                         <Logo />
+                        <Link to="/profile">
+                            {this.state.first} {this.state.last}
+                        </Link>
                         <ProfilePic
                             whenClick={this.showUploader}
                             image={this.state.image}
@@ -96,7 +100,6 @@ class App extends Component {
                     </header>
                     <p>{this.bio}</p>
 
-                    <Link to="/profile">See your profile</Link>
                     <Route
                         path="/profile"
                         render={() => (
@@ -112,53 +115,13 @@ class App extends Component {
                                 whenClick={this.showUploader}
                                 setBio={this.setBio}
                                 showSetBio={this.showSetBio}
-                                // showUploader={this.state.showUploader}
                             />
                         )}
                     />
-                    {/* <Route path="/user/:id" component={OtherPersonProfile} />
-                    {this.state.uploaderIsVisible && (
-                        <Uploader setImage={this.setImage} />
-                    )} */}
+                    <Route path="/user/:id" component={OtherPersonProfile} />
                 </div>
             </BrowserRouter>
         );
     }
 }
 export default App;
-
-//
-// class App extends React.Component {
-// 	constructor() {
-// 		this.showUploader
-// 	}
-// 	componentDidMount(){
-// 		axios.get("/user").then(({data}) =>{
-// 			this.setState({
-// 				first:data.first,
-// 				last:data.last,
-// 				profilePic: data.profilePic,
-// 				id:data.id
-// 			})
-// 		})
-// 	}
-// 	showUploader(){
-// 		this.setState({uploaderIsVisible:true})
-// 	}
-// 	render(){
-// 		if (!this.state.id) {
-// 			return null;
-// 		} return(
-// 			<div id="app"><Logo /></div>
-// 			<ProfilePic
-// 				url={this.state.profilePic}
-// 				onClick={this.showUploader}
-// 			/>
-// 			{this.state.uploaderIsVisible && <Uploader />}
-// 		)
-// 	}
-// }
-//
-//
-// //----------------------
-// <img src

@@ -9,3 +9,19 @@ CREATE TABLE users(
    image VARCHAR(350),
    bio VARCHAR(350)
 );
+
+DROP TABLE IF EXISTS friendships;
+CREATE TABLE friendships(
+	id SERIAL PRIMARY KEY,
+	sender_id INTEGER NOT NULL,
+	recipient_id INTEGER NOT null,
+	status INTEGER,
+	created_at TIMESTAMP DEFAULT CURRENT_STAMP
+	-- updated_at TIMESTAMP DEFAULT CURRENT_STAMP
+)
+
+-- SELECT status, resipient_id,sender_id
+-- from friendships
+-- where (status = 1 or sender_id =2)and
+-- ((resipient_id = $1 and sender_id = $2)
+-- or (resipient_id = $2 and sender_id = $1))

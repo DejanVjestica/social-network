@@ -185,14 +185,29 @@ app.post("/uploadbio", function(req, res) {
             console.log(err);
         });
 });
-// app.get("/users/:id,json", function(req, res) {
-//     if (req.params.id == req.session.userId) {
-//         return res.json({
-//             redirectToProfil: true
-//         });
-//     }
-//     db.getUserById(req.params.id).then(({ rows }) => {});
-// });
+// ______________________________________________
+// Other users profile
+// ______________________________________________
+app.get("/users/:id.json", function(req, res) {
+    if (req.params.id == req.session.userId) {
+        return res.json({
+            redirectToProfil: true
+        });
+    }
+    db
+        .getUserById(req.params.id)
+        .then(({ rows }) => {
+            //
+            res.json(rows[0]);
+            console.log(rows);
+        })
+        .catch(function(err) {
+            res.sendStatus(404);
+            console.log(err);
+        });
+});
+// _________________________________________
+// _________________________________________
 app.get("/user", function(req, res) {
     db
         .getUserById(req.session.userId)

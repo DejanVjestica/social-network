@@ -14,18 +14,18 @@ class Profile extends React.Component {
     }
     inputTextArea(e) {
         this[e.target.name] = e.target.value;
-        console.log(e.target.value);
+        // console.log(e.target.value);
     }
     uploadBio() {
         // e.preventDefault();
-        console.log("before axios insige uploadImage", this.textarea);
+        // console.log("before axios insige uploadImage", this.textarea);
         axios
             .post("/uploadbio", {
                 bio: this.textarea
             })
             .then(({ data }) => {
                 this.props.setBio(data.bio);
-                console.log("Inside uploadBio profile.js: ", this.bio);
+                // console.log("Inside uploadBio profile.js: ", this.bio);
                 // this.props.closeBio();
             });
     }
