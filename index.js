@@ -123,22 +123,22 @@ app.post("/register", function(req, res) {
     // }
 });
 app.post("/login", function(req, res) {
-    console.log("/login: ", req.body, req.body.email);
+    // console.log("/login: ", req.body, req.body.email);
     db
         .getUserByEmail(req.body.email)
         .then(function(user) {
-            console.log(
-                "getUserByEmail: ",
-                // user.rows,
-                req.body.password,
-                user.rows[0].hash_password
-            );
+            // console.log(
+            //     "getUserByEmail: ",
+            //     // user.rows,
+            //     req.body.password,
+            //     user.rows[0].hash_password
+            // );
             return db
                 .checkPassword(req.body.password, user.rows[0].hash_password)
                 .then(function(doesMatch) {
-                    console.log(req.body.password, user.rows[0].hash_password);
+                    // console.log(req.body.password, user.rows[0].hash_password);
                     if (doesMatch) {
-                        console.log("does match", user.rows);
+                        // console.log("does match", user.rows);
                         // throw new Error(
                         //     console.log("login route after check password")
                         // );
@@ -172,6 +172,27 @@ app.get("/logout", function(req, res) {
     // });
     res.redirect("/welcome");
 });
+// ---------------------------------------------
+app.post("/uploadbio", function(req, res) {
+    console.log("inside uploadbio ");
+    db
+        .updateBio(req.session.userId, req.body.bio)
+        .then(function(data) {
+            console.log("route uploadbio", req.session.userId, req.body.bio);
+            res.json(data.rows[0]);
+        })
+        .catch(function(err) {
+            console.log(err);
+        });
+});
+// app.get("/users/:id,json", function(req, res) {
+//     if (req.params.id == req.session.userId) {
+//         return res.json({
+//             redirectToProfil: true
+//         });
+//     }
+//     db.getUserById(req.params.id).then(({ rows }) => {});
+// });
 app.get("/user", function(req, res) {
     db
         .getUserById(req.session.userId)
@@ -198,7 +219,7 @@ app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {
         .catch(function(err) {
             console.log("error in upload", err);
         });
-    console.log("Image uploaded successfully");
+    // console.log("Image uploaded successfully");
 });
 // --------------------------------------------------
 app.get("/welcome", function(req, res) {
@@ -211,10 +232,10 @@ app.get("/welcome", function(req, res) {
 // Always last route
 app.get("*", function(req, res) {
     if (!req.session.userId) {
-        console.log("user not loged in, redirecting to welcome");
-        res.redirect("/welcome");
+        // console.log("user not loged in, redirecting to welcome");
+        // res.redirect("/welcome");
     } else {
-        console.log("user detected");
+        // console.log("user detected");
         res.sendFile(__dirname + "/index.html");
     }
 });

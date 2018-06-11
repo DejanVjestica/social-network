@@ -6,7 +6,7 @@ import axios from "axios";
 import Logo from "./logo";
 import ProfilePic from "./ProfilePic";
 import Profile from "./Profile";
-import Uploader from "./Uploader";
+// import Uploader from "./Uploader";
 
 class App extends Component {
     constructor(props) {
@@ -17,10 +17,13 @@ class App extends Component {
             userid: "",
             image: "",
             bio: "",
-            uploaderIsVisible: false
+            uploaderIsVisible: false,
+            setBioIsVisible: false
         };
         this.setImage = this.setImage.bind(this);
         this.showUploader = this.showUploader.bind(this);
+        this.setBio = this.setBio.bind(this);
+        this.showSetBio = this.showSetBio.bind(this);
     }
     componentDidMount() {
         axios
@@ -33,77 +36,90 @@ class App extends Component {
                         first: data.first,
                         last: data.last,
                         userid: data.id,
-                        image: data.image
+                        image: data.image,
+                        bio: data.bio
                     },
                     () => {
-                        console.log(
-                            "componentDidMount state",
-                            this.state.image
-                        );
+                        console.log("componentDidMount state", this.state.bio);
                     }
                 );
             })
             .catch(function(err) {
                 console.log(err);
             });
+        console.log("after axios comp. did mount", this.state.bio);
     }
+    // Profile image component  -----------------
     showUploader() {
-        console.log("img is cliked");
+        // console.log("img is cliked");
         this.setState({
             uploaderIsVisible: !this.state.uploaderIsVisible
         });
     }
-    setImage(singleimage) {
-        console.log("inside set image", singleimage);
+    setImage(image) {
+        // console.log("inside set image", singleimage);
         this.setState({
-            image: singleimage,
+            image: image,
             uploaderIsVisible: false
         });
     }
-    inputFile(e) {
-        this.file = e.target.files[0];
+    // ___________________________________________
+    // Profile component --------------------
+    showSetBio() {
+        console.log("setBioIsVisible is cliked", this.state.setBioIsVisible);
+        this.setState({
+            // showSetBio: false
+            setBioIsVisible: !this.state.setBioIsVisible
+        });
     }
-    // upload(e) {
-    //     e.preventDefault();
-    //     const formData = new FormData();
-    //     formData.append("file", this.file);
-    //     axios.post("/upload", formData).then(({ data }) => {
-    //         this.props.setImage(data);
-    //     });
-    // }
-    // setBio() {}
+    setBio(bio) {
+        //
+        // axios.get("");
+        this.setState({
+            bio: bio
+            // setBioIsVisible: false
+        });
+        console.log("setbio button is clicked", this.state.bio);
+    }
+
+    // ---------------------------------------------
     render() {
         return (
             <BrowserRouter>
                 <div id="app">
                     <header>
                         <Logo />
-                        {/* <h2>Pet book</h2> */}
                         <ProfilePic
                             whenClick={this.showUploader}
                             image={this.state.image}
                         />
                     </header>
+                    <p>{this.bio}</p>
+
                     <Link to="/profile">See your profile</Link>
                     <Route
                         path="/profile"
                         render={() => (
                             <Profile
+                                // state properties ------
                                 userId={this.state.id}
                                 first={this.state.first}
                                 last={this.state.last}
+                                bio={this.state.bio}
                                 image={this.state.image}
-                                // bio={this.state.bio}
-                                // setBio={this.setBio},
-                                showUploader={this.state.showUploader}
+                                setBioIsVisible={this.state.setBioIsVisible}
+                                // methods ----------------
+                                whenClick={this.showUploader}
+                                setBio={this.setBio}
+                                showSetBio={this.showSetBio}
+                                // showUploader={this.state.showUploader}
                             />
                         )}
                     />
-                    {/* <Route exact path="/profile" component={Profile} /> */}
-                    {/* <Route exact path="/profile" component={Profile} /> */}
+                    {/* <Route path="/user/:id" component={OtherPersonProfile} />
                     {this.state.uploaderIsVisible && (
                         <Uploader setImage={this.setImage} />
-                    )}
+                    )} */}
                 </div>
             </BrowserRouter>
         );

@@ -1,5 +1,5 @@
 import React from "react";
-
+// import Profile from "./Profile";
 // import { Component } from "react";
 // import { Component } from "react-ovject";
 class ProfilePic extends React.Component {
@@ -8,7 +8,7 @@ class ProfilePic extends React.Component {
         this.state = {};
     }
     render() {
-        console.log("render profile image: ", this.props.image);
+        // console.log("ProfilePic.js render profile image: ", this.props.image);
         return (
             <div className="profileImg">
                 {!this.props.image && (

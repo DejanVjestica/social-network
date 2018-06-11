@@ -46,7 +46,7 @@ exports.checkPassword = function(
 // ================ Login and Registration ================
 // ========================================================
 exports.registerUser = function(first, last, email, hashedPassword) {
-    console.log("exports.registerUser", first, last, email, hashedPassword);
+    // console.log("exports.registerUser", first, last, email, hashedPassword);
     return db.query(
         `
 		INSERT INTO users (first, last, email, hash_password)
@@ -68,10 +68,10 @@ exports.getUserByEmail = function(email) {
 };
 // is Loged in----------------------------------------
 exports.getUserById = function(userId) {
-    console.log(userId);
+    // console.log(userId);
     return db.query(
         `
-		SELECT first, last, image
+		SELECT first, last, image, bio
 		FROM users
 		WHERE id = $1
 		`,
@@ -82,6 +82,16 @@ exports.updateProfileImage = function(userId, image) {
     return db.query(
         `UPDATE users SET image = $2 WHERE id = $1 RETURNING image`,
         [userId || null, image]
+    );
+};
+module.exports.updateBio = function updateBio(id, bio) {
+    return db.query(
+        `UPDATE users
+        SET bio = $2
+        WHERE id = $1
+        RETURNING bio
+        `,
+        [id || null, bio]
     );
 };
 // exports.getUserByEmail = function(email) {
