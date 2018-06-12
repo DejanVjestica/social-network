@@ -96,13 +96,13 @@ module.exports.updateBio = function updateBio(id, bio) {
 };
 // Check friendship status ----------------------------------------
 exports.checkFriendshipStatus = function(senderId, recipientId) {
-    // console.log(userId);
+    // console.log("inside db,check frieendship", senderId, recipientId);
     return db.query(
         `
-		SELECT sender_id as senderId, recipient_id as recipientId, status, created_at as createdAt,
+		SELECT sender_id as senderId, recipient_id as recipientId, status
 		FROM friendships
-		WHERE sender_id = $1 AND recipient_id =$2
-		OR sender_id = $2 AND recipient_id =$1
+		WHERE (sender_id = $1 AND recipient_id =$2)
+		OR (sender_id = $2 AND recipient_id =$1)
 		`,
         [senderId, recipientId]
     );

@@ -6,12 +6,13 @@ class OtherPersonProfile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
+        this.updateFriendshipStatus = this.updateFriendshipStatus.bind(this);
     }
     componentDidMount() {
         const id = this.props.match.params.id;
         // console.log("opp.js comp.", this.props.match.params.id);
         axios.get(`/users/${id}.json`).then(({ data }) => {
-            console.log("opp.js comp.did mount:", data);
+            // console.log("opp.js comp.did mount:", data);
             // if (data.redirectToProfil) {
             //     return this.props.history.push("/");
             // }
@@ -23,6 +24,9 @@ class OtherPersonProfile extends React.Component {
                 bio: data.bio
             });
         });
+    }
+    updateFriendshipStatus() {
+        console.log("friend button is clicked");
     }
     render() {
         // if (!this.state.id) {
@@ -37,7 +41,10 @@ class OtherPersonProfile extends React.Component {
                 <p>{this.state.bio}</p>
 
                 <img src={this.state.image} />
-                <FriendButton otherUserID={this.props.match.params.id} />
+                <FriendButton
+                    otherUserID={this.props.match.params.id}
+                    updateFriendship={this.updateFriendshipStatus}
+                />
             </div>
         );
     }

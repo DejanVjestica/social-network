@@ -48,15 +48,15 @@ class App extends Component {
             .catch(function(err) {
                 console.log(err);
             });
-        console.log("after axios comp. did mount", this.state.bio);
+        // console.log("after axios comp. did mount", this.state.bio);
     }
     // Profile image component  -----------------
     showUploader() {
-        console.log("img is cliked", this.state.uploaderIsVisible);
+        // console.log("img is cliked", this.state.uploaderIsVisible);
         this.setState({
             uploaderIsVisible: !this.state.uploaderIsVisible
         });
-        console.log("show uploader:", this.state.uploaderIsVisible);
+        // console.log("show uploader:", this.state.uploaderIsVisible);
     }
     setImage(image) {
         // console.log("inside set image", singleimage);
@@ -68,7 +68,7 @@ class App extends Component {
     // ___________________________________________
     // Profile component --------------------
     showSetBio() {
-        console.log("setBioIsVisible is cliked", this.state.setBioIsVisible);
+        // console.log("setBioIsVisible is cliked", this.state.setBioIsVisible);
         this.setState({
             // showSetBio: false
             setBioIsVisible: !this.state.setBioIsVisible
@@ -81,7 +81,7 @@ class App extends Component {
             bio: bio,
             setBioIsVisible: false
         });
-        console.log("setbio button is clicked", this.state.bio);
+        // console.log("setbio button is clicked", this.state.bio);
     }
 
     // ---------------------------------------------
@@ -91,9 +91,12 @@ class App extends Component {
                 <div id="app">
                     <header>
                         <Logo />
+                        {/* <Link to="/logout">logout</Link> */}
                         <Link to="/profile">
                             {this.state.first} {this.state.last}
                         </Link>
+
+                        {/* <Link to="/">home</Link> */}
                         <ProfilePic
                             whenClick={this.showUploader}
                             image={this.state.image}

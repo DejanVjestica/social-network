@@ -174,14 +174,28 @@ app.get("/logout", function(req, res) {
 });
 // ---------------------------------------------
 app.post("/uploadbio", function(req, res) {
-    console.log("inside uploadbio ");
+    // console.log("inside uploadbio ");
     db
         .updateBio(req.session.userId, req.body.bio)
         .then(function(data) {
-            console.log("route uploadbio", req.session.userId, req.body.bio);
+            // console.log("route uploadbio", req.session.userId, req.body.bio);
             res.json(data.rows[0]);
         })
         .catch(function(err) {
+            console.log(err);
+        });
+});
+// this route check if user is register on app component
+app.get("/user", function(req, res) {
+    db
+        .getUserById(req.session.userId)
+        .then(function(user) {
+            // console.log(req.session.userid);
+            res.json(user.rows[0]);
+            // console.log(user.rows);
+        })
+        .catch(function(err) {
+            res.sendStatus(404);
             console.log(err);
         });
 });
@@ -199,20 +213,7 @@ app.get("/users/:id.json", function(req, res) {
         .then(({ rows }) => {
             //
             res.json(rows[0]);
-            console.log(rows);
-        })
-        .catch(function(err) {
-            res.sendStatus(404);
-            console.log(err);
-        });
-});
-app.get("/user", function(req, res) {
-    db
-        .getUserById(req.session.userId)
-        .then(function(user) {
-            // console.log(req.session.userid);
-            res.json(user.rows[0]);
-            // console.log(user.rows);
+            // console.log(rows);
         })
         .catch(function(err) {
             res.sendStatus(404);
@@ -220,20 +221,27 @@ app.get("/user", function(req, res) {
         });
 });
 // _________________________________________
-// app.get("/friendships:id.json", function(req, res) {
-//     console.log("in route friendships server: ", req.session.id, req.params.id);
-//     db
-//         .checkFriendshipStatus(req.session.id, req.params.id)
-//         .then(function(status) {
-//             console.log("inside friendship route:", req.session.userid);
-//             res.json(status.rows[0]);
-//             // console.log(user.rows);
-//         })
-//         .catch(function(err) {
-//             res.sendStatus(404);
-//             console.log(err);
-//         });
-// });
+app.get("/friendships/:id.json", function(req, res) {
+    console.log(
+        "in route friendships index.js: ",
+        req.session.userId,
+        req.params.id
+    );
+    db
+        .checkFriendshipStatus(req.session.userId, req.params.id)
+        .then(function(statusResult) {
+            // console.log(
+            //     "inside friendship route:",
+            //     console.log(statusResult.data.rows[0])
+            // );
+            res.json({ statusResult });
+            console.log("after check friend_:", statusResult);
+        })
+        .catch(function(err) {
+            res.sendStatus(404);
+            console.log("server side: ", err);
+        });
+});
 // _________________________________________
 // _________________________________________
 // -----------------------------------------
