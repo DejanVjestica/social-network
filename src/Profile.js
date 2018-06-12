@@ -32,7 +32,10 @@ class Profile extends React.Component {
     render() {
         return (
             <div>
-                <ProfilePic image={this.props.image} />
+                <ProfilePic
+                    whenClick={this.whenClicked}
+                    image={this.props.image}
+                />
                 <h1>
                     Welcome {this.props.first} {this.props.last}
                 </h1>
@@ -47,18 +50,13 @@ class Profile extends React.Component {
                             className=""
                             onChange={this.inputTextArea}
                         />
-                        <button onClick={this.uploadBio}>
-                            Submit{/* {this.props.bio ? "Edit" : "Add your bio now"} */}
-                        </button>
+                        <button onClick={this.uploadBio}>Submit</button>
                     </div>
                 )}
 
                 {!this.props.setBioIsVisible && (
                     <button onClick={this.props.showSetBio}>
-                        Add your bio now
-                        {/* {this.props.setBioIsVisible
-                            ? "Close"
-                            : "Add your bio now"} */}
+                        {this.props.bio ? "Edit you bio" : "Add your bio now"}
                     </button>
                 )}
             </div>

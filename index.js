@@ -206,8 +206,6 @@ app.get("/users/:id.json", function(req, res) {
             console.log(err);
         });
 });
-// _________________________________________
-// _________________________________________
 app.get("/user", function(req, res) {
     db
         .getUserById(req.session.userId)
@@ -221,6 +219,23 @@ app.get("/user", function(req, res) {
             console.log(err);
         });
 });
+// _________________________________________
+// app.get("/friendships:id.json", function(req, res) {
+//     console.log("in route friendships server: ", req.session.id, req.params.id);
+//     db
+//         .checkFriendshipStatus(req.session.id, req.params.id)
+//         .then(function(status) {
+//             console.log("inside friendship route:", req.session.userid);
+//             res.json(status.rows[0]);
+//             // console.log(user.rows);
+//         })
+//         .catch(function(err) {
+//             res.sendStatus(404);
+//             console.log(err);
+//         });
+// });
+// _________________________________________
+// _________________________________________
 // -----------------------------------------
 app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {
     db

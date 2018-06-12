@@ -7,7 +7,7 @@ import Logo from "./logo";
 import ProfilePic from "./ProfilePic";
 import Profile from "./Profile";
 import OtherPersonProfile from "./oop";
-// import Uploader from "./Uploader";
+import Uploader from "./Uploader";
 
 class App extends Component {
     constructor(props) {
@@ -52,10 +52,11 @@ class App extends Component {
     }
     // Profile image component  -----------------
     showUploader() {
-        // console.log("img is cliked");
+        console.log("img is cliked", this.state.uploaderIsVisible);
         this.setState({
             uploaderIsVisible: !this.state.uploaderIsVisible
         });
+        console.log("show uploader:", this.state.uploaderIsVisible);
     }
     setImage(image) {
         // console.log("inside set image", singleimage);
@@ -77,8 +78,8 @@ class App extends Component {
         //
         // axios.get("");
         this.setState({
-            bio: bio
-            // setBioIsVisible: false
+            bio: bio,
+            setBioIsVisible: false
         });
         console.log("setbio button is clicked", this.state.bio);
     }
@@ -96,6 +97,7 @@ class App extends Component {
                         <ProfilePic
                             whenClick={this.showUploader}
                             image={this.state.image}
+                            // setBioIsVisible={this.state.setBioIsVisible}
                         />
                     </header>
                     <p>{this.bio}</p>
@@ -111,6 +113,7 @@ class App extends Component {
                                 bio={this.state.bio}
                                 image={this.state.image}
                                 setBioIsVisible={this.state.setBioIsVisible}
+                                uploaderIsVisible={this.state.uploaderIsVisible}
                                 // methods ----------------
                                 whenClick={this.showUploader}
                                 setBio={this.setBio}
@@ -119,6 +122,9 @@ class App extends Component {
                         )}
                     />
                     <Route path="/user/:id" component={OtherPersonProfile} />
+                    {this.state.uploaderIsVisible && (
+                        <Uploader setImage={this.setImage} />
+                    )}
                 </div>
             </BrowserRouter>
         );

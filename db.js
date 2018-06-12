@@ -94,6 +94,21 @@ module.exports.updateBio = function updateBio(id, bio) {
         [id || null, bio]
     );
 };
+// Check friendship status ----------------------------------------
+exports.checkFriendshipStatus = function(senderId, recipientId) {
+    // console.log(userId);
+    return db.query(
+        `
+		SELECT sender_id as senderId, recipient_id as recipientId, status, created_at as createdAt,
+		FROM friendships
+		WHERE sender_id = $1 AND recipient_id =$2
+		OR sender_id = $2 AND recipient_id =$1
+		`,
+        [senderId, recipientId]
+    );
+};
+
+// ______________________________________________
 // exports.getUserByEmail = function(email) {
 //     return db.query(`SELECT * FROM users WHERE email = $1`, [email]);
 // `

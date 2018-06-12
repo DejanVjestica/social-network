@@ -2,6 +2,8 @@ import React from "react";
 // import Profile from "./Profile";
 // import { Component } from "react";
 // import { Component } from "react-ovject";
+// import Uploader from "./Uploader";
+
 class ProfilePic extends React.Component {
     constructor(props) {
         super(props);

@@ -11,7 +11,7 @@ class OtherPersonProfile extends React.Component {
         const id = this.props.match.params.id;
         // console.log("opp.js comp.", this.props.match.params.id);
         axios.get(`/users/${id}.json`).then(({ data }) => {
-            console.log("data.first:", data);
+            console.log("opp.js comp.did mount:", data);
             // if (data.redirectToProfil) {
             //     return this.props.history.push("/");
             // }
