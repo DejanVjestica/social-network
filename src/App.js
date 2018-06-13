@@ -41,7 +41,13 @@ class App extends Component {
                         bio: data.bio
                     },
                     () => {
-                        // console.log("componentDidMount state", this.state.bio);
+                        // console.log(
+                        //     "componentDidMount state",
+                        //
+                        //     this.state.userid
+                        //     // this.state.first,
+                        //     // data.id
+                        // );
                     }
                 );
             })
@@ -91,6 +97,7 @@ class App extends Component {
                 <div id="app">
                     <header>
                         <Logo />
+                        <p>User id:{this.state.userid}</p>
                         {/* <Link to="/logout">logout</Link> */}
                         <Link to="/profile">
                             {this.state.first} {this.state.last}

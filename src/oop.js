@@ -6,7 +6,7 @@ class OtherPersonProfile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
-        this.updateFriendshipStatus = this.updateFriendshipStatus.bind(this);
+        // this.updateFriendshipStatus = this.updateFriendshipStatus.bind(this);
     }
     componentDidMount() {
         const id = this.props.match.params.id;
@@ -25,9 +25,7 @@ class OtherPersonProfile extends React.Component {
             });
         });
     }
-    updateFriendshipStatus() {
-        console.log("friend button is clicked");
-    }
+
     render() {
         // if (!this.state.id) {
         //     return null;
@@ -43,7 +41,7 @@ class OtherPersonProfile extends React.Component {
                 <img src={this.state.image} />
                 <FriendButton
                     otherUserID={this.props.match.params.id}
-                    updateFriendship={this.updateFriendshipStatus}
+                    // updateFriendship={this.updateFriendshipStatus}
                 />
             </div>
         );

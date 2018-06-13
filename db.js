@@ -71,7 +71,7 @@ exports.getUserById = function(userId) {
     // console.log(userId);
     return db.query(
         `
-		SELECT first, last, image, bio
+		SELECT id, first, last, image, bio
 		FROM users
 		WHERE id = $1
 		`,
@@ -99,7 +99,7 @@ exports.checkFriendshipStatus = function(senderId, recipientId) {
     // console.log("inside db,check frieendship", senderId, recipientId);
     return db.query(
         `
-		SELECT sender_id as senderId, recipient_id as recipientId, status
+		SELECT sender_id as senderId, recipient_id as recipientId, status || null
 		FROM friendships
 		WHERE (sender_id = $1 AND recipient_id =$2)
 		OR (sender_id = $2 AND recipient_id =$1)

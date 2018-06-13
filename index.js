@@ -81,16 +81,9 @@ app.use(express.static(pathPublic));
 // Routes --------------------------------------
 // ---------------------------------------------
 app.post("/register", function(req, res) {
-    // let userId;
-    // console.log("userId ", req.session.userId);
-    // userId = false;
-    // req.session.userId = userId;
-    // console.log("route /welcome req.body", req.body);
     db
         .hashPassword(req.body.password)
         .then(function(hashedPassword) {
-            // console.log("this is hashted pass", hashedPassword);
-            //
             return db.registerUser(
                 req.body.first,
                 req.body.last,
@@ -102,7 +95,6 @@ app.post("/register", function(req, res) {
             req.session.userId = result.rows[0].id;
             req.session.firstName = req.body.first;
             req.session.lastName = req.body.last;
-            // res.redirect("/");
         })
         .then(function() {
             res.json({
@@ -115,37 +107,21 @@ app.post("/register", function(req, res) {
                 err: true
             });
         });
-    // if (req.session.userId) {
-    //     res.redirect("/");
-    // } else {
-    //     console.log("route /welcome userId ", req.session.userId);
-    //     res.sendFile(__dirname + "/index.html");
-    // }
 });
+// ---------------------------------------------
 app.post("/login", function(req, res) {
     // console.log("/login: ", req.body, req.body.email);
     db
         .getUserByEmail(req.body.email)
         .then(function(user) {
-            // console.log(
-            //     "getUserByEmail: ",
-            //     // user.rows,
-            //     req.body.password,
-            //     user.rows[0].hash_password
-            // );
             return db
                 .checkPassword(req.body.password, user.rows[0].hash_password)
                 .then(function(doesMatch) {
                     // console.log(req.body.password, user.rows[0].hash_password);
                     if (doesMatch) {
-                        // console.log("does match", user.rows);
-                        // throw new Error(
-                        //     console.log("login route after check password")
-                        // );
                         req.session.userId = user.rows[0].userid;
                         req.session.firstName = user.rows[0].firstName;
                         req.session.lastName = user.rows[0].lastName;
-                        // res.redirect("/");
                         res.json({
                             success: true
                         });
@@ -163,14 +139,24 @@ app.post("/login", function(req, res) {
             });
         });
 });
+// --------------------------------------------
 app.get("/logout", function(req, res) {
     req.session = null;
-    // console.log("route /logout: ", req.session);
-    // res.redirect("/");
-    // res.json({
-    //     success: true
-    // });
     res.redirect("/welcome");
+});
+// Upload Profile image ------------------------------------------
+app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {
+    db
+        .updateProfileImage(
+            req.session.userId,
+            config.s3Url + req.file.filename
+        )
+        .then(function(result) {
+            res.json(result.rows[0].image);
+        })
+        .catch(function(err) {
+            console.log("error in upload", err);
+        });
 });
 // ---------------------------------------------
 app.post("/uploadbio", function(req, res) {
@@ -199,9 +185,9 @@ app.get("/user", function(req, res) {
             console.log(err);
         });
 });
-// ______________________________________________
+// ------------------------------------------------
 // Other users profile
-// ______________________________________________
+// ------------------------------------------------
 app.get("/users/:id.json", function(req, res) {
     if (req.params.id == req.session.userId) {
         return res.json({
@@ -220,7 +206,9 @@ app.get("/users/:id.json", function(req, res) {
             console.log(err);
         });
 });
-// _________________________________________
+// ------------------------------------------------
+// Friendships
+// ------------------------------------------------
 app.get("/friendships/:id.json", function(req, res) {
     console.log(
         "in route friendships index.js: ",
@@ -234,7 +222,7 @@ app.get("/friendships/:id.json", function(req, res) {
             //     "inside friendship route:",
             //     console.log(statusResult.data.rows[0])
             // );
-            res.json({ statusResult });
+            res.json(statusResult.rows[0] || {});
             console.log("after check friend_:", statusResult);
         })
         .catch(function(err) {
@@ -245,20 +233,7 @@ app.get("/friendships/:id.json", function(req, res) {
 // _________________________________________
 // _________________________________________
 // -----------------------------------------
-app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {
-    db
-        .updateProfileImage(
-            req.session.userId,
-            config.s3Url + req.file.filename
-        )
-        .then(function(result) {
-            res.json(result.rows[0].image);
-        })
-        .catch(function(err) {
-            console.log("error in upload", err);
-        });
-    // console.log("Image uploaded successfully");
-});
+
 // --------------------------------------------------
 app.get("/welcome", function(req, res) {
     if (req.session.userId) {
