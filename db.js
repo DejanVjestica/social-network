@@ -80,13 +80,19 @@ exports.getUserById = function(userId) {
 };
 exports.updateProfileImage = function(userId, image) {
     return db.query(
-        `UPDATE users SET image = $2 WHERE id = $1 RETURNING image`,
+        `
+		UPDATE users
+		SET image = $2
+		WHERE id = $1
+		RETURNING image
+		`,
         [userId || null, image]
     );
 };
 module.exports.updateBio = function updateBio(id, bio) {
     return db.query(
-        `UPDATE users
+        `
+		UPDATE users
         SET bio = $2
         WHERE id = $1
         RETURNING bio
@@ -99,7 +105,7 @@ exports.checkFriendshipStatus = function(senderId, recipientId) {
     // console.log("inside db,check frieendship", senderId, recipientId);
     return db.query(
         `
-		SELECT sender_id as senderId, recipient_id as recipientId, status || null
+		SELECT sender_id, recipient_id, status
 		FROM friendships
 		WHERE (sender_id = $1 AND recipient_id =$2)
 		OR (sender_id = $2 AND recipient_id =$1)
@@ -107,7 +113,51 @@ exports.checkFriendshipStatus = function(senderId, recipientId) {
         [senderId, recipientId]
     );
 };
-
+exports.makeRequest = function(sender_id, recipient_id) {
+    return db.query(
+        `
+		INSERT INTO friendships ( sender_id,recipient_id, status)
+		VALUES ($1, $2, 1)
+		RETURNING sender_id, recipient_id, status
+		`,
+        [sender_id, recipient_id]
+    );
+};
+exports.requestAccepted = function(senderId, recipientId) {
+    console.log(senderId, recipientId);
+    return db.query(
+        `
+		UPDATE friendships
+        SET status = 2
+        WHERE (sender_id = $1 AND recipient_id = $2)
+        OR (sender_id = $2 AND recipient_id = $1)
+        RETURNING status
+		`,
+        [senderId, recipientId]
+    );
+};
+exports.cancelRequest = function(user1, user2) {
+    return db.query(
+        `
+		DELETE FROM friendships
+        WHERE (sender_id = $1 AND recipient_id = $2)
+        OR (sender_id = $2 AND recipient_id = $1)
+		`,
+        [user1, user2]
+    );
+};
+// exports.cancelRequest = function(sender_id, recipient_id) {
+//     return db.query(
+//         `
+// 		UPDATE friendships
+//         SET status = 0
+//         WHERE (sender_id = $1 AND recipient_id = $2)
+//         OR (sender_id = $2 AND recipient_id = $1)
+//         RETURNING status
+// 		`,
+//         [recipient_id, sender_id]
+//     );
+// };
 // ______________________________________________
 // exports.getUserByEmail = function(email) {
 //     return db.query(`SELECT * FROM users WHERE email = $1`, [email]);

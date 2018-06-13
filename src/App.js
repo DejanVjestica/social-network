@@ -98,10 +98,12 @@ class App extends Component {
                 <div id="app">
                     <header>
                         <Logo />
-                        <p>User id:{this.state.userid}</p>
+                        {/* <p>User id:{this.state.userid}</p> */}
                         {/* <Link to="/logout">logout</Link> */}
                         <Link to="/profile">
                             {this.state.first} {this.state.last}
+                            {" loged in userId: "}
+                            {this.state.userid}
                         </Link>
 
                         {/* <Link to="/">home</Link> */}

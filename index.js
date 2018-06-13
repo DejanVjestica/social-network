@@ -209,7 +209,7 @@ app.get("/users/:id.json", function(req, res) {
 // ------------------------------------------------
 // Friendships
 // ------------------------------------------------
-app.get("/friendships/:id.json", function(req, res) {
+app.get("/friendships/:id.json", (req, res) => {
     // console.log(
     //     "in route friendships index.js: ",
     //     req.session.userId,
@@ -217,17 +217,52 @@ app.get("/friendships/:id.json", function(req, res) {
     // );
     db
         .checkFriendshipStatus(req.session.userId, req.params.id)
-        .then(function(statusResult) {
-            // console.log(
-            //     "inside friendship route:",
-            //     console.log(statusResult.data.rows[0])
-            // );
+        .then(statusResult => {
+            // console.log("inside friendship route:", statusResult.rows[0]);
             res.json(statusResult.rows[0] || {});
             // console.log("after check friend_:", statusResult);
         })
-        .catch(function(err) {
+        .catch(err => {
             res.sendStatus(404);
             console.log("server side: ", err);
+        });
+});
+
+// mace request --------------------
+app.post("/makerequest", (req, res) => {
+    db
+        .makeRequest(req.session.userId, req.body.recipientId)
+        .then(data => {
+            console.log("data rows:", data.rows[0]);
+            res.json(data.rows[0] || {});
+        })
+        .catch(err => {
+            console.log(err);
+        });
+});
+// accept request --------------------
+app.post("/requestaccepted", (req, res) => {
+    console.log(req.body);
+    db
+        .requestAccepted(req.session.userId, req.body.senderId)
+        .then(data => {
+            console.log("data rows:", data.rows[0]);
+            res.json(data.rows[0] || {});
+        })
+        .catch(err => {
+            console.log(err);
+        });
+});
+// cansel request --------------------
+app.post("/deleterequest", (req, res) => {
+    db
+        .cancelRequest(req.session.userId, req.body.otherUserId)
+        .then(data => {
+            console.log("data rows:", data.rows[0]);
+            res.json(data.rows[0] || {});
+        })
+        .catch(err => {
+            console.log(err);
         });
 });
 
