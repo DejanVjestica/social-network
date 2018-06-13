@@ -63,7 +63,7 @@ class friendButton extends React.Component {
         const status = data.status;
         const recipientId = data.recipient_id;
         const senderId = data.sender_id;
-        console.log("get button", status, recipientId, data);
+        // console.log("get button", status, recipientId, data);
         let buttonText, friendButtonIsClicked;
         if (status == 1) {
             // console.log("is is status 1", status, recipientid);
