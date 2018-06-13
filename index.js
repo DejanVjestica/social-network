@@ -210,11 +210,11 @@ app.get("/users/:id.json", function(req, res) {
 // Friendships
 // ------------------------------------------------
 app.get("/friendships/:id.json", function(req, res) {
-    console.log(
-        "in route friendships index.js: ",
-        req.session.userId,
-        req.params.id
-    );
+    // console.log(
+    //     "in route friendships index.js: ",
+    //     req.session.userId,
+    //     req.params.id
+    // );
     db
         .checkFriendshipStatus(req.session.userId, req.params.id)
         .then(function(statusResult) {
@@ -223,13 +223,14 @@ app.get("/friendships/:id.json", function(req, res) {
             //     console.log(statusResult.data.rows[0])
             // );
             res.json(statusResult.rows[0] || {});
-            console.log("after check friend_:", statusResult);
+            // console.log("after check friend_:", statusResult);
         })
         .catch(function(err) {
             res.sendStatus(404);
             console.log("server side: ", err);
         });
 });
+
 // _________________________________________
 // _________________________________________
 // -----------------------------------------

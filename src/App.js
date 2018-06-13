@@ -8,6 +8,7 @@ import ProfilePic from "./ProfilePic";
 import Profile from "./Profile";
 import OtherPersonProfile from "./oop";
 import Uploader from "./Uploader";
+import Friends from "./friends";
 
 class App extends Component {
     constructor(props) {
@@ -132,6 +133,7 @@ class App extends Component {
                         )}
                     />
                     <Route path="/user/:id" component={OtherPersonProfile} />
+                    <Route path="/friends" component={Friends} />
                     {this.state.uploaderIsVisible && (
                         <Uploader setImage={this.setImage} />
                     )}

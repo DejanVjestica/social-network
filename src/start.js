@@ -1,5 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
+
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import reduxPromise from "redux-promise";
+import reducer from "./reducers";
 // import Axios from "axios";
 
 // import Register from "./Register";
@@ -7,12 +12,19 @@ import Welcome from "./Welcome";
 // import Logo from "./logo";
 import App from "./App";
 
+const store = createStore(reducer, applyMiddleware(reduxPromise));
+
 let component;
 if (location.pathname == "/welcome") {
     console.log("loged out");
     component = <Welcome />;
 } else {
-    component = <App />;
+    component = (
+        <Provider store={store}>
+            <App />
+        </Provider>
+    );
+
     // component = <Logo />;
     console.log("logged in");
 }
