@@ -9,11 +9,17 @@ import reducer from "./reducers";
 
 // import Register from "./Register";
 import Welcome from "./Welcome";
+import { getSocket } from "./socket";
 // import Logo from "./logo";
 import App from "./App";
+// import getSocket from "./socket";
+import { composeWithDevTools } from "redux-devtools-extension";
 
-const store = createStore(reducer, applyMiddleware(reduxPromise));
-
+const store = createStore(
+    reducer,
+    composeWithDevTools(applyMiddleware(reduxPromise))
+);
+getSocket(store);
 let component;
 if (location.pathname == "/welcome") {
     console.log("loged out");

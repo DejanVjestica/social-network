@@ -124,7 +124,7 @@ exports.makeRequest = function(sender_id, recipient_id) {
     );
 };
 exports.requestAccepted = function(senderId, recipientId) {
-    console.log(senderId, recipientId);
+    // console.log(senderId, recipientId);
     return db.query(
         `
 		UPDATE friendships
@@ -145,4 +145,25 @@ exports.cancelRequest = function(user1, user2) {
 		`,
         [user1, user2]
     );
+};
+// ------------------------------------
+exports.getPendingAndFriends = function(userId) {
+    const q = `
+	SELECT users.id, first, last, image, status
+	FROM friendships
+	JOIN users
+	ON ( status = 1 AND recipient_id = $1 AND sender_id = users.id)
+	OR ( status = 2 AND recipient_id = $1 AND sender_id = users.id)
+	OR ( status = 2 AND sender_id = $1 AND recipient_id = users.id)
+	`;
+    return db.query(q, [userId]);
+};
+// ------------------------------------
+exports.getUsersBeiIds = function(arrayOfIds) {
+    const query = `
+		SELECT id, first, last, image
+		FROM users
+		WHERE id = ANY($1)
+		`;
+    return db.query(query, [arrayOfIds]);
 };

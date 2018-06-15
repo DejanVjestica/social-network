@@ -9,6 +9,7 @@ import Profile from "./Profile";
 import OtherPersonProfile from "./oop";
 import Uploader from "./Uploader";
 import Friends from "./friends";
+import Online from "./online";
 
 class App extends Component {
     constructor(props) {
@@ -41,21 +42,12 @@ class App extends Component {
                         image: data.image,
                         bio: data.bio
                     },
-                    () => {
-                        // console.log(
-                        //     "componentDidMount state",
-                        //
-                        //     this.state.userid
-                        //     // this.state.first,
-                        //     // data.id
-                        // );
-                    }
+                    () => {}
                 );
             })
             .catch(function(err) {
                 console.log(err);
             });
-        // console.log("after axios comp. did mount", this.state.bio);
     }
     // Profile image component  -----------------
     showUploader() {
@@ -77,13 +69,10 @@ class App extends Component {
     showSetBio() {
         // console.log("setBioIsVisible is cliked", this.state.setBioIsVisible);
         this.setState({
-            // showSetBio: false
             setBioIsVisible: !this.state.setBioIsVisible
         });
     }
     setBio(bio) {
-        //
-        // axios.get("");
         this.setState({
             bio: bio,
             setBioIsVisible: false
@@ -98,15 +87,15 @@ class App extends Component {
                 <div id="app">
                     <header>
                         <Logo />
-                        {/* <p>User id:{this.state.userid}</p> */}
-                        {/* <Link to="/logout">logout</Link> */}
                         <Link to="/profile">
                             {this.state.first} {this.state.last}
                             {" loged in userId: "}
                             {this.state.userid}
                         </Link>
 
-                        {/* <Link to="/">home</Link> */}
+                        <Link to="/friends">Friends</Link>
+                        <Link to="/online">Online Users</Link>
+                        <a href="/logout">Logout</a>
                         <ProfilePic
                             whenClick={this.showUploader}
                             image={this.state.image}
@@ -134,8 +123,17 @@ class App extends Component {
                             />
                         )}
                     />
+                    {/* <Route
+                        path="/user/:id"
+                        render={() => (
+                            <OtherPersonProfile userId={this.state.id} />
+                        )}
+                    /> */}
                     <Route path="/user/:id" component={OtherPersonProfile} />
+
                     <Route path="/friends" component={Friends} />
+                    <Route path="/online" component={Online} />
+
                     {this.state.uploaderIsVisible && (
                         <Uploader setImage={this.setImage} />
                     )}

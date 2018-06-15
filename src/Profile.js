@@ -33,7 +33,7 @@ class Profile extends React.Component {
         return (
             <div>
                 <ProfilePic
-                    whenClick={this.whenClicked}
+                    whenClick={this.props.whenClick}
                     image={this.props.image}
                 />
                 <h1>

@@ -17,7 +17,7 @@ class OtherPersonProfile extends React.Component {
             //     return this.props.history.push("/");
             // }
             this.setState({
-                // id: data.id,
+                id: data.id,
                 first: data.first,
                 last: data.last,
                 image: data.image,
@@ -34,6 +34,7 @@ class OtherPersonProfile extends React.Component {
             <div id="opp">
                 <FriendButton
                     otherUserId={this.props.match.params.id}
+                    senderUserId={this.state.id}
                     // updateFriendship={this.updateFriendshipStatus}
                 />
                 <p>

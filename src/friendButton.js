@@ -90,6 +90,7 @@ class friendButton extends React.Component {
             buttonText,
             friendButtonIsClicked
         });
+        // console.log(this.state.senderId);
     }
     // ------------------------------------------------------
     componentDidMount() {
@@ -105,12 +106,17 @@ class friendButton extends React.Component {
             .catch(function(err) {
                 console.log("friend button catch:", err);
             });
+        // console.log(
+        //     "component did mpunt",
+        //     this.props.otherUserId,
+        //     this.props.senderUserId
+        // );
     }
     render() {
-        // if (!this.state.status) {
+        // if (this.state.recipientId == this.state.senderId) {
         //     return null;
+        // } else {
         // }
-        // console.log("friend button render: ", this.state);
         return (
             <div>
                 <p>Status is: {this.state.status}</p>
@@ -119,6 +125,7 @@ class friendButton extends React.Component {
                 </button>
             </div>
         );
+        // console.log("friend button render: ", this.state);
     }
 }
 export default friendButton;

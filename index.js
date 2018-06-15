@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const compression = require("compression");
 
+// socket.io
+const server = require("http").Server(app);
+const io = require("socket.io")(server, { origins: "localhost:8080" });
 // csurf -----------------------------------------------
 const cookieSession = require("cookie-session");
 const bodyParser = require("body-parser");
@@ -40,12 +43,21 @@ const uploader = multer({
 // cookie parser ---------------------------------------
 app.use(require("cookie-parser")());
 // cookie session ---------------------------------------
-app.use(
-    cookieSession({
-        secret: `I'm always angry.`,
-        maxAge: 1000 * 60 * 60 * 24 * 14
-    })
-);
+const cookieSessionMiddleware = cookieSession({
+    secret: `I'm always angry.`,
+    maxAge: 1000 * 60 * 60 * 24 * 90
+});
+
+app.use(cookieSessionMiddleware);
+io.use(function(socket, next) {
+    cookieSessionMiddleware(socket.request, socket.request.res, next);
+});
+// app.use(
+//     cookieSession({
+//         secret: `I'm always angry.`,
+//         maxAge: 1000 * 60 * 60 * 24 * 14
+//     })
+// );
 // body parser -------------------------------
 app.use(
     bodyParser.urlencoded({
@@ -172,15 +184,15 @@ app.post("/uploadbio", function(req, res) {
         });
 });
 // this route check if user is register on app component
-app.get("/user", function(req, res) {
+app.get("/user", (req, res) => {
     db
         .getUserById(req.session.userId)
-        .then(function(user) {
+        .then(user => {
             // console.log(req.session.userid);
             res.json(user.rows[0]);
             // console.log(user.rows);
         })
-        .catch(function(err) {
+        .catch(err => {
             res.sendStatus(404);
             console.log(err);
         });
@@ -188,7 +200,7 @@ app.get("/user", function(req, res) {
 // ------------------------------------------------
 // Other users profile
 // ------------------------------------------------
-app.get("/users/:id.json", function(req, res) {
+app.get("/users/:id.json", (req, res) => {
     if (req.params.id == req.session.userId) {
         return res.json({
             redirectToProfil: true
@@ -201,7 +213,7 @@ app.get("/users/:id.json", function(req, res) {
             res.json(rows[0]);
             // console.log(rows);
         })
-        .catch(function(err) {
+        .catch(err => {
             res.sendStatus(404);
             console.log(err);
         });
@@ -233,7 +245,7 @@ app.post("/makerequest", (req, res) => {
     db
         .makeRequest(req.session.userId, req.body.recipientId)
         .then(data => {
-            console.log("data rows:", data.rows[0]);
+            // console.log("data rows:", data.rows[0]);
             res.json(data.rows[0] || {});
         })
         .catch(err => {
@@ -258,20 +270,32 @@ app.post("/deleterequest", (req, res) => {
     db
         .cancelRequest(req.session.userId, req.body.otherUserId)
         .then(data => {
-            console.log("data rows:", data.rows[0]);
+            // console.log("data rows:", data.rows[0]);
             res.json(data.rows[0] || {});
         })
         .catch(err => {
             console.log(err);
         });
 });
+// Friends list
 
+app.get("/friends.json", (req, res) => {
+    db
+        .getPendingAndFriends(req.session.userId)
+        .then(data => {
+            // console.log("coming from request:", data.rows);
+            res.json(data.rows);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+});
 // _________________________________________
 // _________________________________________
 // -----------------------------------------
 
 // --------------------------------------------------
-app.get("/welcome", function(req, res) {
+app.get("/welcome", (req, res) => {
     if (req.session.userId) {
         res.redirect("/");
     } else {
@@ -279,7 +303,7 @@ app.get("/welcome", function(req, res) {
     }
 });
 // Always last route
-app.get("*", function(req, res) {
+app.get("*", (req, res) => {
     if (!req.session.userId) {
         // console.log("user not loged in, redirecting to welcome");
         // res.redirect("/welcome");
@@ -290,10 +314,61 @@ app.get("*", function(req, res) {
 });
 
 // Server listens
-app.listen(8080, function() {
+server.listen(8080, () => {
     console.log("I'm listening.");
 });
 
+let onlineUsers = {};
+io.on("connection", function(socket) {
+    if (!socket.request.session || !socket.request.session.userId) {
+        return socket.disconnect(true);
+    }
+    console.log(`socket with the id ${socket.id} is now connected`);
+    const userId = socket.request.session.userId;
+    // let count = Object.values(onlineUsers).filter(id => id == userId).length;
+    onlineUsers[socket.id] = userId;
+    // const socketId = socket.id;
+    console.log(userId, socket.id, onlineUsers);
+    db.getUsersBeiIds(Object.values(onlineUsers)).then(({ rows }) => {
+        socket.emit("onlineUsers", rows);
+    });
+    // if (count > 1) {
+    // }
+    socket.on("disconnect", () => {
+        // delete onlineUsers[socketId];
+        console.log(`socket with the id ${socket.id} is now disconnected`);
+    });
+});
+// console.log(`socket with the id ${socket.id} is now connected`);
+// if (!socket.request.session || !socket.request.session.userId) {
+//     return socket.disconnect(true);
+// }
+// const userId = socket.request.session.userId;
+// let count = Object.values(onlineUsers).filter(id => id == userId).length;
+// if (count > 1) {
+// }
+// onlineUsers[socket.io] = userId;
+// db
+//     .getUsersByIds(Object.values(onlineUsers))
+//     .then(({ rows }) => {
+//         socket.emit("onlineUsers", rows);
+//     })
+//     .catch(err => {
+//         console.log(err);
+//     });
+//
+// socket.on("disconnect", () => {
+//     delete onlineUsers[socketId];
+//     // console.log(`socket with the id ${socket.id} is now disconnected`);
+// });
+
+// socket.on("thanks", function(data) {
+//     console.log(data);
+// });
+//
+// socket.emit("welcome", {
+//     message: "Welome. It is nice to see you"
+// });
 // custom midleware --------------------------
 // function requireUserId(req, res, next) {
 //     if (req.session.userId) {
