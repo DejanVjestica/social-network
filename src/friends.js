@@ -15,23 +15,28 @@ class Friends extends React.Component {
     render() {
         // console.log("friends");
         return (
-            <div className="friendList">
+            <div className="friendList wrapper">
                 <div className="pendingFriends">
-                    <h2>Pending friends</h2>
+                    <header>
+                        <h4>Pending friends</h4>
+                    </header>
                     {this.props.pending &&
                         this.props.pending.map(pending => {
                             return (
                                 // <div>{pending.first}</div>
 
-                                <div className="" key={pending.id}>
-                                    {/* <img
-                                        className=""
-                                        src={
-                                            pending.image || "/assets/user.png"
-                                        }
-                                    /> */}
-                                    {pending.first} {pending.last} {pending.id}
+                                <div
+                                    className="pendingFriend "
+                                    key={pending.id}
+                                >
+                                    <img className="" src={pending.image} />
+                                    <p>
+                                        {pending.first} {pending.last}{" "}
+                                        {pending.id}
+                                    </p>
+
                                     <button
+                                        className=""
                                         onClick={() =>
                                             this.props.dispatch(
                                                 acceptRequest(pending.id)
@@ -46,19 +51,19 @@ class Friends extends React.Component {
                         })}
                 </div>
                 <div className="currentFriends">
-                    <h2>Current friends</h2>
+                    <header>
+                        <h4>Current friends</h4>
+                    </header>
                     {this.props.friends &&
                         this.props.friends.map(friends => {
                             return (
                                 // <div>{pending.first}</div>
 
-                                <div className="" key={friends.id}>
-                                    {/* <img
-                                        className=""
-                                        src={
-                                            friends.image || "/assets/user.png"
-                                        }
-                                    /> */}
+                                <div
+                                    className="currentFriend "
+                                    key={friends.id}
+                                >
+                                    <img className="" src={friends.image} />
                                     {friends.first} {friends.last} {friends.id}
                                     <button
                                         onClick={() =>

@@ -5,18 +5,18 @@ export function recieveFriendsAndWannabes() {
     return axios
         .get("/friends.json")
         .then(resp => {
-            console.log("inside recieveFriendsAndWannabes: ", resp);
+            // console.log("inside recieveFriendsAndWannabes: ", resp);
             return {
                 type: "RECIEVE_FRIENDS_AND_WANNABES",
                 friends: resp.data
             };
         })
         .catch(err => {
-            console.log(err);
+            console.log("inside wanabes and friends catch: ", err);
         });
 }
 export function acceptRequest(senderId) {
-    console.log("accept friendship", senderId);
+    // console.log("accept friendship", senderId);
     // here comes axios request
     return axios
         .post("/requestaccepted", {
@@ -51,23 +51,29 @@ export function endFriendship(otherUserId) {
         });
 }
 
-// COmponent Online user -------------------------------------
+// User has connected -------------------------------------
 export function checkForOnlineUsers(onlineUsers) {
     // return "halo";
-    console.log("checkForOnlineUsers action", onlineUsers);
+    // console.log("checkForOnlineUsers action", onlineUsers);
     return {
         type: "CHECK_FOR_ONLINE_USERS",
         onlineUsers
     };
-    // return axios
-    //     .get("/online", {})
-    //     .then(resp => {
-    //         // console.log("inside deleterequest: ", resp.data);
-    //         return {
-    //             type: "check_For_Online_Users"
-    //         };
-    //     })
-    //     .catch(err => {
-    //         console.log("deleteFriendship catch", err);
-    //     });
+}
+// User has disconnected -------------------------------------
+export function userHasJoined(userJoined) {
+    // console.log("userDisconected action", userJoined);
+    return {
+        type: "USER_HAS_JOINED",
+        userJoined
+    };
+}
+// User has disconnected -------------------------------------
+export function userHasDisconected(userLeft) {
+    // return "halo";
+    // console.log("userDisconected action", userLeft);
+    return {
+        type: "USER_DISCONECTED",
+        userLeft
+    };
 }

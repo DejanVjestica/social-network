@@ -8,12 +8,18 @@ class Online extends React.Component {
     }
     render() {
         return (
-            <div>
+            <div className="onlineUsers wrapper">
+                <header>
+                    <h4>Online now</h4>
+                </header>
                 {this.props.onlineUsers &&
                     this.props.onlineUsers.map(onlineUsers => {
                         return (
-                            <div key={onlineUsers.id}>
-                                <h2>{onlineUsers.first}</h2>
+                            <div className="onlineUser" key={onlineUsers.id}>
+                                <img className="" src={onlineUsers.image} />
+                                <p>
+                                    {onlineUsers.first} {onlineUsers.last}
+                                </p>
                             </div>
                         );
                     })}
@@ -27,13 +33,13 @@ class Online extends React.Component {
 const mapStateToProps = state => {
     return {
         // type: state.type,
-        onlineUsers: state.onlineUsers && state.onlineUsers
-        // pending:
-        //     state.friendsList &&
-        //     state.friendsList.filter(friend => friend.status == 1),
-        // friends:
-        //     state.friendsList &&
-        //     state.friendsList.filter(friend => friend.status == 2)
+        onlineUsers: state.onlineUsers && state.onlineUsers,
+        pending:
+            state.friendsList &&
+            state.friendsList.filter(friend => friend.status == 1),
+        friends:
+            state.friendsList &&
+            state.friendsList.filter(friend => friend.status == 2)
     };
 };
 // ---------------------------------------

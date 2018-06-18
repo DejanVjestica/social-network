@@ -36,11 +36,30 @@ export default function(state = {}, action) {
         });
         console.log("inside reduser: ", state);
     }
+    // -------------------------------------
+    // -------------------------------------
     if (action.type == "CHECK_FOR_ONLINE_USERS") {
         state = Object.assign({}, state, {
             onlineUsers: action.onlineUsers
         });
-        console.log("inside reduser: ", state);
+    }
+    if (action.type == "USER_HAS_JOINED") {
+        state = Object.assign({}, state, {
+            onlineUsers: state.onlineUsers.concat(userJoined)
+        });
+    }
+    if (action.type == "USER_DISCONECTED") {
+        state = Object.assign({}, state, {
+            onlineUsers: state.onlineUsers.filter(function(onlineUser) {
+                if (onlineUser.id == action.id) {
+                    return false;
+                }
+                return true;
+            })
+        });
     }
     return state;
 }
+
+// console.log("inside reduser: ", state);
+// console.log("inside reduser: ", state);

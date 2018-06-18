@@ -52,12 +52,6 @@ app.use(cookieSessionMiddleware);
 io.use(function(socket, next) {
     cookieSessionMiddleware(socket.request, socket.request.res, next);
 });
-// app.use(
-//     cookieSession({
-//         secret: `I'm always angry.`,
-//         maxAge: 1000 * 60 * 60 * 24 * 14
-//     })
-// );
 // body parser -------------------------------
 app.use(
     bodyParser.urlencoded({
@@ -254,11 +248,11 @@ app.post("/makerequest", (req, res) => {
 });
 // accept request --------------------
 app.post("/requestaccepted", (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
     db
         .requestAccepted(req.session.userId, req.body.senderId)
         .then(data => {
-            console.log("data rows:", data.rows[0]);
+            // console.log("data rows:", data.rows[0]);
             res.json(data.rows[0] || {});
         })
         .catch(err => {
@@ -306,7 +300,7 @@ app.get("/welcome", (req, res) => {
 app.get("*", (req, res) => {
     if (!req.session.userId) {
         // console.log("user not loged in, redirecting to welcome");
-        // res.redirect("/welcome");
+        res.redirect("/welcome");
     } else {
         // console.log("user detected");
         res.sendFile(__dirname + "/index.html");
@@ -318,62 +312,41 @@ server.listen(8080, () => {
     console.log("I'm listening.");
 });
 
+// io socket --------------------------------------
 let onlineUsers = {};
-io.on("connection", function(socket) {
+io.on("connection", socket => {
+    console.log(`socket with the id ${socket.id} is now connected`);
     if (!socket.request.session || !socket.request.session.userId) {
         return socket.disconnect(true);
     }
-    console.log(`socket with the id ${socket.id} is now connected`);
     const userId = socket.request.session.userId;
-    // let count = Object.values(onlineUsers).filter(id => id == userId).length;
+    let userIds = Object.values(onlineUsers);
     onlineUsers[socket.id] = userId;
-    // const socketId = socket.id;
-    console.log(userId, socket.id, onlineUsers);
+    console.log("ONLINEUSERS: ", onlineUsers, userIds);
+
     db.getUsersBeiIds(Object.values(onlineUsers)).then(({ rows }) => {
         socket.emit("onlineUsers", rows);
     });
-    // if (count > 1) {
-    // }
-    socket.on("disconnect", () => {
-        // delete onlineUsers[socketId];
-        console.log(`socket with the id ${socket.id} is now disconnected`);
+
+    let count = Object.values(onlineUsers).filter(id => id == userId).length;
+    if (count == 1) {
+        db.getUserById(userId).then(({ rows }) => {
+            socket.broadcast.emit("userJoined", rows);
+        });
+    }
+
+    socket.on("disconnect", socket => {
+        console.log(
+            `socket with the socket.id ${socket.id} is now disconnected`
+        );
+        const thisUserId = onlineUsers[socket.id];
+        delete onlineUsers[socket.id];
+        let userIndex = userIds.indexOf(userId);
+        userIds.splice(userIndex, 1);
+
+        if (userIds.indexOf(userId) == -1) {
+            io.socket.emit("userLeft", thisUserId);
+        }
+        socket.on("chatMessage");
     });
 });
-// console.log(`socket with the id ${socket.id} is now connected`);
-// if (!socket.request.session || !socket.request.session.userId) {
-//     return socket.disconnect(true);
-// }
-// const userId = socket.request.session.userId;
-// let count = Object.values(onlineUsers).filter(id => id == userId).length;
-// if (count > 1) {
-// }
-// onlineUsers[socket.io] = userId;
-// db
-//     .getUsersByIds(Object.values(onlineUsers))
-//     .then(({ rows }) => {
-//         socket.emit("onlineUsers", rows);
-//     })
-//     .catch(err => {
-//         console.log(err);
-//     });
-//
-// socket.on("disconnect", () => {
-//     delete onlineUsers[socketId];
-//     // console.log(`socket with the id ${socket.id} is now disconnected`);
-// });
-
-// socket.on("thanks", function(data) {
-//     console.log(data);
-// });
-//
-// socket.emit("welcome", {
-//     message: "Welome. It is nice to see you"
-// });
-// custom midleware --------------------------
-// function requireUserId(req, res, next) {
-//     if (req.session.userId) {
-//         res.redirect("/");
-//     } else {
-//         next();
-//     }
-// }

@@ -167,3 +167,10 @@ exports.getUsersBeiIds = function(arrayOfIds) {
 		`;
     return db.query(query, [arrayOfIds]);
 };
+// export.userHasJustJoined = function (userIs) {
+// 	const query = `
+//
+// 	`,
+//
+//
+// }
