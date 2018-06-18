@@ -62,7 +62,7 @@ export function checkForOnlineUsers(onlineUsers) {
 }
 // User has disconnected -------------------------------------
 export function userHasJoined(userJoined) {
-    // console.log("userDisconected action", userJoined);
+    // console.log("user has joined action", userJoined);
     return {
         type: "USER_HAS_JOINED",
         userJoined
@@ -71,6 +71,7 @@ export function userHasJoined(userJoined) {
 // User has disconnected -------------------------------------
 export function userHasDisconected(userLeft) {
     // return "halo";
+
     // console.log("userDisconected action", userLeft);
     return {
         type: "USER_DISCONECTED",

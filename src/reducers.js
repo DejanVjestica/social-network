@@ -3,7 +3,7 @@ export default function(state = {}, action) {
         state = Object.assign({}, state, {
             friendsList: action.friends
         });
-        console.log("inside reduser: ", state);
+        // console.log("inside reduser: ", state);
     }
     // accept
     if (action.type == "ACCEPT_REQUEST") {
@@ -19,7 +19,7 @@ export default function(state = {}, action) {
                 }
             })
         });
-        console.log("inside reduser: ", state);
+        // console.log("inside reduser: ", state);
     }
     if (action.type == "DELETE_REQUEST") {
         state = Object.assign({}, state, {
@@ -34,28 +34,28 @@ export default function(state = {}, action) {
                 }
             })
         });
-        console.log("inside reduser: ", state);
+        // console.log("inside reduser: ", state);
     }
     // -------------------------------------
     // -------------------------------------
     if (action.type == "CHECK_FOR_ONLINE_USERS") {
+        // console.log(" reduser CHECK_FOR_ONLINE_USERS");
         state = Object.assign({}, state, {
             onlineUsers: action.onlineUsers
         });
     }
     if (action.type == "USER_HAS_JOINED") {
+        // console.log("reduser USER_HAS_JOINED", action.userJoined);
         state = Object.assign({}, state, {
-            onlineUsers: state.onlineUsers.concat(userJoined)
+            onlineUsers: state.onlineUsers.concat(action.userJoined)
         });
     }
     if (action.type == "USER_DISCONECTED") {
+        // console.log("reduser USER_DISCONECTED", action.userLeft);
         state = Object.assign({}, state, {
-            onlineUsers: state.onlineUsers.filter(function(onlineUser) {
-                if (onlineUser.id == action.id) {
-                    return false;
-                }
-                return true;
-            })
+            onlineUsers: state.onlineUsers.filter(
+                user => user.id != action.userLeft
+            )
         });
     }
     return state;

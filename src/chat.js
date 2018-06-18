@@ -6,7 +6,7 @@ class CHat extends React.Component(){
 		this.elem.scrollTop = this.elem.scrollHeight - this.elem.
 	}
 	let val;
-	<textarea onCharge={ e => val = e.target.value}/>
+	<textarea onChange={ e => val = e.target.value}/>
 	<button onClick={e => socket.emit("chatMessage",val )}/>
 
 	<div ref={elem => this.elem = elem} id="chat">

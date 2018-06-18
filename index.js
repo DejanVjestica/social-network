@@ -1,8 +1,9 @@
+// express app -----------------------------------
 const express = require("express");
 const app = express();
 const compression = require("compression");
 
-// socket.io
+// socket.io -------------------------------
 const server = require("http").Server(app);
 const io = require("socket.io")(server, { origins: "localhost:8080" });
 // csurf -----------------------------------------------
@@ -11,15 +12,13 @@ const bodyParser = require("body-parser");
 const csurf = require("csurf");
 const pathPublic = "public";
 const db = require("./db");
-
-// Uploading files ---------------------------------------
+// Amazon web services s3 ---------------------------------------
 const s3 = require("./s3");
-
+// Multer ----------------------------------
 const config = require("./config");
 const multer = require("multer");
 const uidSafe = require("uid-safe");
 const path = require("path");
-
 const diskStorage = multer.diskStorage({
     destination: function(req, file, callback) {
         callback(null, __dirname + "/uploads");
@@ -30,7 +29,6 @@ const diskStorage = multer.diskStorage({
         });
     }
 });
-
 const uploader = multer({
     storage: diskStorage,
     limits: {
@@ -38,8 +36,8 @@ const uploader = multer({
     }
 });
 //---------------------------------------------------
-
-// const csurf = require("csurf");
+// Midlewhare
+// --------------------------------------------------
 // cookie parser ---------------------------------------
 app.use(require("cookie-parser")());
 // cookie session ---------------------------------------
@@ -47,7 +45,6 @@ const cookieSessionMiddleware = cookieSession({
     secret: `I'm always angry.`,
     maxAge: 1000 * 60 * 60 * 24 * 90
 });
-
 app.use(cookieSessionMiddleware);
 io.use(function(socket, next) {
     cookieSessionMiddleware(socket.request, socket.request.res, next);
@@ -315,38 +312,43 @@ server.listen(8080, () => {
 // io socket --------------------------------------
 let onlineUsers = {};
 io.on("connection", socket => {
-    console.log(`socket with the id ${socket.id} is now connected`);
     if (!socket.request.session || !socket.request.session.userId) {
         return socket.disconnect(true);
     }
     const userId = socket.request.session.userId;
-    let userIds = Object.values(onlineUsers);
+    const userIds = Object.values(onlineUsers);
     onlineUsers[socket.id] = userId;
-    console.log("ONLINEUSERS: ", onlineUsers, userIds);
+    console.log(`socket with the socket.id ${socket.id} is now connected`);
+    // console.log("ONLINEUSERS: ", onlineUsers, userIds);
 
     db.getUsersBeiIds(Object.values(onlineUsers)).then(({ rows }) => {
+        // Emit online users ----------------------------
         socket.emit("onlineUsers", rows);
     });
 
     let count = Object.values(onlineUsers).filter(id => id == userId).length;
     if (count == 1) {
         db.getUserById(userId).then(({ rows }) => {
+            // console.log("after second query", rows);
+            // Broadcasting user joined --------------s
             socket.broadcast.emit("userJoined", rows);
         });
     }
 
-    socket.on("disconnect", socket => {
+    socket.on("disconnect", function() {
         console.log(
             `socket with the socket.id ${socket.id} is now disconnected`
         );
         const thisUserId = onlineUsers[socket.id];
+        // console.log("disconnect hapend", thisUserId, userId, onlineUsers);
         delete onlineUsers[socket.id];
+        // console.log("after delete", onlineUsers);
         let userIndex = userIds.indexOf(userId);
         userIds.splice(userIndex, 1);
 
         if (userIds.indexOf(userId) == -1) {
-            io.socket.emit("userLeft", thisUserId);
+            io.sockets.emit("userLeft", thisUserId);
         }
-        socket.on("chatMessage");
+        // socket.on("chatMessage");
     });
 });

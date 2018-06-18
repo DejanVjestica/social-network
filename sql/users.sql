@@ -19,6 +19,12 @@ CREATE TABLE friendships(
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+DROP TABLE IF EXISTS chatmessages;
+CREATE TABLE chatmessages(
+	id SERIAL PRIMARY KEY,
+	sender_id INTEGER NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 -- updated_at TIMESTAMP DEFAULT CURRENT_STAMP
 -- SELECT status, resipient_id,sender_id
 -- from friendships
