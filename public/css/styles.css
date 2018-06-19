@@ -68,11 +68,13 @@ header {
 
 /* Component friends */
 .friendList,
-.onlineUsers {
+.onlineUsers,
+.chat {
     /* display: flex; */
     width: 60%;
 }
 .friendList img,
+.chat img,
 .onlineUsers img {
     width: 50px;
     height: auto;
@@ -81,6 +83,7 @@ header {
 .currentFriend {
 }
 .pendingFriend,
+.chat,
 .currentFriend,
 .onlineUser {
     border-bottom: solid 0.5px grey;

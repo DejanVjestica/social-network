@@ -167,10 +167,23 @@ exports.getUsersBeiIds = function(arrayOfIds) {
 		`;
     return db.query(query, [arrayOfIds]);
 };
-// export.userHasJustJoined = function (userIs) {
-// 	const query = `
-//
-// 	`,
-//
-//
-// }
+// ------------------------------------
+exports.getChatMessages = function() {
+    const q = `
+	SELECT users.id as sender_id, first, last, image, message, chatmessages.id as message_id, chatmessages.created_at
+	FROM users
+	JOIN chatmessages
+	ON users.id = sender_id
+	ORDER BY created_at ASC LIMIT 20
+	`;
+    return db.query(q);
+};
+// ------------------------------------
+exports.newChatMessage = function(newMessage, userId) {
+    const q = `
+	INSERT INTO chatmessages (sender_id, message)
+	VALUES ($2, $1)
+	RETURNING id as message_id, sender_id, message, created_at 
+	`;
+    return db.query(q, [newMessage, userId]);
+};

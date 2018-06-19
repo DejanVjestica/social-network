@@ -281,7 +281,18 @@ app.get("/friends.json", (req, res) => {
             console.log(err);
         });
 });
-// _________________________________________
+// app.get("/chat", (req, res) => {
+//     db
+//         .getChatMessages()
+//         .then(data => {
+//             console.log("inside route /chat", data.rows);
+//             res.json(data.rows);
+//         })
+//         .catch(err => {
+//             console.log("Inside route /chat, catch", err);
+//         });
+// });
+// // _________________________________________
 // _________________________________________
 // -----------------------------------------
 
@@ -311,6 +322,7 @@ server.listen(8080, () => {
 
 // io socket --------------------------------------
 let onlineUsers = {};
+let chatMessages = {};
 io.on("connection", socket => {
     if (!socket.request.session || !socket.request.session.userId) {
         return socket.disconnect(true);
@@ -318,14 +330,31 @@ io.on("connection", socket => {
     const userId = socket.request.session.userId;
     const userIds = Object.values(onlineUsers);
     onlineUsers[socket.id] = userId;
+    chatMessages[socket.id] = userId;
     console.log(`socket with the socket.id ${socket.id} is now connected`);
     // console.log("ONLINEUSERS: ", onlineUsers, userIds);
 
-    db.getUsersBeiIds(Object.values(onlineUsers)).then(({ rows }) => {
-        // Emit online users ----------------------------
-        socket.emit("onlineUsers", rows);
-    });
-
+    // Check for online users ------------------------------------
+    db
+        .getUsersBeiIds(Object.values(onlineUsers))
+        .then(({ rows }) => {
+            // Emit online users ----------------------------
+            socket.emit("onlineUsers", rows);
+        })
+        .catch(err => {
+            console.log("Inside route /chat, catch", err);
+        });
+    // Checks for Chat messages ------------------------------------
+    db
+        .getChatMessages()
+        .then(({ rows }) => {
+            // console.log("inside chat", rows);
+            socket.emit("chatMessages", rows);
+            // res.json(rows);
+        })
+        .catch(err => {
+            console.log("Inside chat, catch", err);
+        });
     let count = Object.values(onlineUsers).filter(id => id == userId).length;
     if (count == 1) {
         db.getUserById(userId).then(({ rows }) => {
@@ -334,7 +363,38 @@ io.on("connection", socket => {
             socket.broadcast.emit("userJoined", rows);
         });
     }
+    // -------------------------------------------------
+    // ON NEW CHAT MESSAGE
+    // -------------------------------------------------
+    socket.on("chatMessage", newMessage => {
+        // const thisUserMessage = chatMessages[socket.id];
+        console.log("index on chatMessage", newMessage, userId);
+        db
+            .newChatMessage(newMessage, userId)
+            .then(({ rows }) => {
+                console.log("chatMessage", rows);
 
+                db
+                    .getUserById(rows[0].sender_id)
+                    .then(data => {
+                        let newMessage = Object.assign(rows[0], data.rows[0]);
+                        console.log("db query get User by id", newMessage);
+                        socket.emit("chatMessage", newMessage);
+                    })
+                    .catch(function(err) {
+                        console.log("inside catcht chat message", err);
+                    });
+                // Broadcasting user joined --------------s
+                // socket.broadcast.emit("userJoined", rows);
+            })
+            .catch(function(err) {
+                console.log("chatMessage catch", err);
+            });
+        // store.dispatch(checkForMessages(userLeft));
+    });
+    // -------------------------------------------------
+    // DISCONECT
+    // -------------------------------------------------
     socket.on("disconnect", function() {
         console.log(
             `socket with the socket.id ${socket.id} is now disconnected`
@@ -349,6 +409,5 @@ io.on("connection", socket => {
         if (userIds.indexOf(userId) == -1) {
             io.sockets.emit("userLeft", thisUserId);
         }
-        // socket.on("chatMessage");
     });
 });

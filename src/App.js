@@ -10,6 +10,7 @@ import OtherPersonProfile from "./oop";
 import Uploader from "./Uploader";
 import Friends from "./friends";
 import Online from "./online";
+import Chat from "./chat";
 
 class App extends Component {
     constructor(props) {
@@ -88,12 +89,12 @@ class App extends Component {
                     <header>
                         <Logo />
                         <Link to="/profile">
-                            {this.state.first} {this.state.last}
-                            {" loged in userId: "}
+                            {this.state.first} {this.state.last}{" "}
                             {this.state.userid}
                         </Link>
 
                         <Link to="/friends">Friends</Link>
+                        <Link to="/chat">Chat</Link>
                         <Link to="/online">Online Users</Link>
                         <a href="/logout">Logout</a>
                         <ProfilePic
@@ -133,6 +134,7 @@ class App extends Component {
 
                     <Route path="/friends" component={Friends} />
                     <Route path="/online" component={Online} />
+                    <Route path="/chat" component={Chat} />
 
                     {this.state.uploaderIsVisible && (
                         <Uploader setImage={this.setImage} />

@@ -78,3 +78,22 @@ export function userHasDisconected(userLeft) {
         userLeft
     };
 }
+// User has disconnected -------------------------------------
+export function checkForMessages(chatMessages) {
+    // return "halo";
+
+    // console.log("checkForMessages action", chatMessages);
+    return {
+        type: "CHECK_FOR_MESSAGES",
+        chatMessages
+    };
+}
+export function newChatMessage(newMessage) {
+    // return "halo";
+
+    console.log("newChatMessage action", newMessage);
+    return {
+        type: "NEW_CHAT_MESSAGE",
+        newMessage
+    };
+}
