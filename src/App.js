@@ -85,56 +85,101 @@ class App extends Component {
     render() {
         return (
             <BrowserRouter>
-                <div id="app">
-                    <header>
-                        <Logo />
-                        <Link to="/profile">
-                            {this.state.first} {this.state.last}{" "}
-                            {this.state.userid}
+                <div id="app" className="row">
+                    {/* ------------- header ----------------------- */}
+                    <header className="appHeader row col-12 justify-content-between  no-gutters bg-primary">
+                        <div className="logo col-2 align-self-center">
+                            <Logo />
+                        </div>
+                        <div className="profileImage col-1 row align-self-center justify-content-between">
+                            <Link
+                                className="align-self-center text-light"
+                                to="/profile"
+                            >
+                                {this.state.first}
+                            </Link>
+                            <ProfilePic
+                                className="align-self-center"
+                                whenClick={this.showUploader}
+                                image={this.state.image}
+                                // setBioIsVisible={this.state.setBioIsVisible}
+                            />
+                        </div>
+                    </header>
+                    {/* ------------- sidebar ----------------------- */}
+                    <aside className="col-2 appSidebar bg-dark">
+                        <Link
+                            to="/profile"
+                            className="sideBarUserInfo flexboxContainer text-light row"
+                        >
+                            <ProfilePic
+                                whenClick={this.showUploader}
+                                image={this.state.image}
+                                className="text-light align-self-center"
+                                // setBioIsVisible={this.state.setBioIsVisible}
+                            />
+                            <p className="align-self-center">
+                                {this.state.first} {this.state.last}
+                            </p>
                         </Link>
 
-                        <Link to="/friends">Friends</Link>
-                        <Link to="/chat">Chat</Link>
-                        <Link to="/online">Online Users</Link>
-                        <a href="/logout">Logout</a>
-                        <ProfilePic
-                            whenClick={this.showUploader}
-                            image={this.state.image}
-                            // setBioIsVisible={this.state.setBioIsVisible}
+                        <div className="nav bg-light flex-column ">
+                            <Link to="/friends">
+                                <button className="dropdown-item">
+                                    Friends
+                                </button>
+                            </Link>
+                            <Link to="/chat">
+                                <button className="dropdown-item">Chats</button>
+                            </Link>
+                            <Link to="/online">
+                                <button className="dropdown-item">
+                                    Online Users
+                                </button>
+                            </Link>
+                            <a className="dropdown-item" href="/logout">
+                                Logout
+                            </a>
+                        </div>
+                    </aside>
+                    {/* ------------- Routes ----------------------- */}
+                    <div className="col-8">
+                        <Route
+                            path="/profile"
+                            render={() => (
+                                <Profile
+                                    // state properties ------
+                                    userId={this.state.id}
+                                    first={this.state.first}
+                                    last={this.state.last}
+                                    bio={this.state.bio}
+                                    image={this.state.image}
+                                    setBioIsVisible={this.state.setBioIsVisible}
+                                    uploaderIsVisible={
+                                        this.state.uploaderIsVisible
+                                    }
+                                    // methods ----------------
+                                    whenClick={this.showUploader}
+                                    setBio={this.setBio}
+                                    showSetBio={this.showSetBio}
+                                />
+                            )}
                         />
-                    </header>
-                    <p>{this.bio}</p>
+                        <Route
+                            path="/user/:id"
+                            component={OtherPersonProfile}
+                        />
 
-                    <Route
-                        path="/profile"
-                        render={() => (
-                            <Profile
-                                // state properties ------
-                                userId={this.state.id}
-                                first={this.state.first}
-                                last={this.state.last}
-                                bio={this.state.bio}
-                                image={this.state.image}
-                                setBioIsVisible={this.state.setBioIsVisible}
-                                uploaderIsVisible={this.state.uploaderIsVisible}
-                                // methods ----------------
-                                whenClick={this.showUploader}
-                                setBio={this.setBio}
-                                showSetBio={this.showSetBio}
-                            />
-                        )}
-                    />
+                        <Route path="/friends" component={Friends} />
+                        <Route path="/online" component={Online} />
+                        <Route path="/chat" component={Chat} />
+                    </div>
                     {/* <Route
                         path="/user/:id"
                         render={() => (
                             <OtherPersonProfile userId={this.state.id} />
                         )}
                     /> */}
-                    <Route path="/user/:id" component={OtherPersonProfile} />
-
-                    <Route path="/friends" component={Friends} />
-                    <Route path="/online" component={Online} />
-                    <Route path="/chat" component={Chat} />
 
                     {this.state.uploaderIsVisible && (
                         <Uploader setImage={this.setImage} />

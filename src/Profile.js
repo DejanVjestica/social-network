@@ -31,7 +31,8 @@ class Profile extends React.Component {
     }
     render() {
         return (
-            <div>
+            <div className="profile">
+                <h3>Your profile details</h3>
                 <ProfilePic
                     whenClick={this.props.whenClick}
                     image={this.props.image}

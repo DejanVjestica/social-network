@@ -379,7 +379,7 @@ io.on("connection", socket => {
                     .then(data => {
                         let newMessage = Object.assign(rows[0], data.rows[0]);
                         console.log("db query get User by id", newMessage);
-                        socket.emit("chatMessage", newMessage);
+                        io.sockets.emit("chatMessage", newMessage);
                     })
                     .catch(function(err) {
                         console.log("inside catcht chat message", err);

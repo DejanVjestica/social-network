@@ -6,20 +6,33 @@ import {
     endFriendship
 } from "./actions.js";
 
+import { BrowserRouter, Link, Route } from "react-router-dom";
 class Friends extends React.Component {
     // -----------------------------------------
     constructor(props) {
         super(props);
     }
+    handleGoToProfile() {
+        console.log("handleGoToProfile");
+    }
     // -------------------------------------
     render() {
-        // console.log("friends");
+        console.log("friends", this.props.friends);
+        console.log("pending", Array.isArray(this.props.pending));
+        // if (this.props.pending) {
+        //     console.log("true", this.props.pending);
+        // } else {
+        //     console.log("false", this.props.friends);
+        // }
         return (
-            <div className="friendList wrapper">
+            <div className="friendList flexItem elementPadding">
                 <div className="pendingFriends">
-                    <header>
-                        <h4>Pending friends</h4>
-                    </header>
+                    {this.props.pending &&
+                        this.props.pending.length === 0 && (
+                            <header>
+                                <h4>Pending friends</h4>
+                            </header>
+                        )}
                     {this.props.pending &&
                         this.props.pending.map(pending => {
                             return (
@@ -45,15 +58,23 @@ class Friends extends React.Component {
                                     >
                                         accept
                                     </button>
-                                    <br />
+                                    {/* <a href=`/user/{pending.id}`></a> */}
+                                    {/* <a href={`/user/{$pending.id}`}>
+                                        go to profile
+                                    </a> */}
+                                    {/* <button onClick={this.handleGoToProfile}>
+                                        go to profile
+                                    </button> */}
                                 </div>
                             );
                         })}
                 </div>
                 <div className="currentFriends">
-                    <header>
-                        <h4>Current friends</h4>
-                    </header>
+                    {this.props.friends && (
+                        <header>
+                            <h4>Current friends</h4>
+                        </header>
+                    )}
                     {this.props.friends &&
                         this.props.friends.map(friends => {
                             return (
@@ -73,8 +94,10 @@ class Friends extends React.Component {
                                         }
                                     >
                                         end friendship
-                                    </button>{" "}
-                                    <br />
+                                    </button>
+                                    <Link to={`/user/${friends.id}`}>
+                                        Go to Profile
+                                    </Link>
                                 </div>
                             );
                         })}
