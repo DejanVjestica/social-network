@@ -209,6 +209,19 @@ app.get("/users/:id.json", (req, res) => {
             console.log(err);
         });
 });
+// User search ----------------------------------
+app.get(`/search`, (req, res) => {
+    console.log("inside server roure search", req.query.q);
+    db
+        .getSearchResult(req.query.q)
+        .then(result => {
+            console.log(result.rows);
+            res.json(result.rows);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+});
 // ------------------------------------------------
 // Friendships
 // ------------------------------------------------

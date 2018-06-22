@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { emit } from "./socket";
 
-console.log("inside chat componnent");
+// console.log("inside chat componnent");
 
 class Chat extends React.Component {
     constructor(props) {
@@ -20,7 +20,8 @@ class Chat extends React.Component {
     render() {
         // let val;
         return (
-            <div className="chat wrapper">
+            <div className="chat">
+                <h4>Chat wall</h4>
                 <div
                     className="chatMessageContainer"
                     ref={elem => {
@@ -30,16 +31,23 @@ class Chat extends React.Component {
                     {this.props.chatMessages &&
                         this.props.chatMessages.map(chatMessages => {
                             return (
-                                <div className="" key={chatMessages.message_id}>
+                                <div
+                                    className="media"
+                                    key={chatMessages.message_id}
+                                >
                                     <img
-                                        className=""
+                                        className="mr-3"
                                         src={chatMessages.image}
                                     />
-                                    <h4>
-                                        {chatMessages.first} {chatMessages.last}
-                                    </h4>
-                                    <h5>{chatMessages.created_at}</h5>
-                                    <p>{chatMessages.message}</p>
+                                    <div className="media-body">
+                                        <h5>
+                                            {chatMessages.first}{" "}
+                                            {chatMessages.last}
+                                        </h5>
+                                        <time>{chatMessages.created_at}</time>
+                                        <p>{chatMessages.message}</p>
+                                    </div>
+                                    {/* <h5>{chatMessages.created_at}</h5> */}
                                 </div>
                             );
                         })}

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function Logo() {
     return (
-        <div className="logo ">
+        <React.Fragment>
             <Link to="/">
                 <img
                     className=""
@@ -11,7 +11,7 @@ function Logo() {
                     alt="Generic placeholder image"
                 />
             </Link>
-        </div>
+        </React.Fragment>
     );
 }
 export default Logo;

@@ -11,6 +11,7 @@ import Uploader from "./Uploader";
 import Friends from "./friends";
 import Online from "./online";
 import Chat from "./chat";
+import Search from "./search";
 
 class App extends Component {
     constructor(props) {
@@ -87,43 +88,42 @@ class App extends Component {
             <BrowserRouter>
                 <div id="app" className="row">
                     {/* ------------- header ----------------------- */}
-                    <header className="appHeader row col-12 justify-content-between  no-gutters bg-primary">
-                        <div className="logo col-2 align-self-center">
+                    <header className="navbar col-12 bg-primary text-white navbar-dark nav-bar-expand  ">
+                        <div className="navbar-brand col-1 ">
                             <Logo />
                         </div>
-                        <div className="profileImage col-1 row align-self-center justify-content-between">
-                            <Link
-                                className="align-self-center text-light"
-                                to="/profile"
-                            >
-                                {this.state.first}
+                        {/* <div className="form-inline col-9">
+                            <Search />
+                        </div> */}
+                        <div className="media col-1">
+                            <ProfilePic
+                                whenClick={this.showUploader}
+                                image={this.state.image}
+                                // setBioIsVisible={this.state.setBioIsVisible}
+                            />
+                            <Link className="media-body" to="/profile">
+                                <p className="text-white">{this.state.first}</p>
                             </Link>
+                        </div>
+                    </header>
+                    {/* ------------- sidebar ----------------------- */}
+                    <aside className="col-3 appSidebar bg-secondary">
+                        <Link
+                            to="/profile"
+                            className="row col-12 sideBarUserInfo text-light"
+                        >
                             <ProfilePic
                                 className="align-self-center"
                                 whenClick={this.showUploader}
                                 image={this.state.image}
                                 // setBioIsVisible={this.state.setBioIsVisible}
                             />
-                        </div>
-                    </header>
-                    {/* ------------- sidebar ----------------------- */}
-                    <aside className="col-2 appSidebar bg-dark">
-                        <Link
-                            to="/profile"
-                            className="sideBarUserInfo flexboxContainer text-light row"
-                        >
-                            <ProfilePic
-                                whenClick={this.showUploader}
-                                image={this.state.image}
-                                className="text-light align-self-center"
-                                // setBioIsVisible={this.state.setBioIsVisible}
-                            />
-                            <p className="align-self-center">
+                            <p className="align-self-center padding-left">
                                 {this.state.first} {this.state.last}
                             </p>
                         </Link>
 
-                        <div className="nav bg-light flex-column ">
+                        <div className="nav col-12 bg-light flex-column ">
                             <Link to="/friends">
                                 <button className="dropdown-item">
                                     Friends
@@ -141,9 +141,12 @@ class App extends Component {
                                 Logout
                             </a>
                         </div>
+                        <div className="form-inline col-9">
+                            <Search />
+                        </div>
                     </aside>
                     {/* ------------- Routes ----------------------- */}
-                    <div className="col-8">
+                    <div className="main-content row col-9">
                         <Route
                             path="/profile"
                             render={() => (

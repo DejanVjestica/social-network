@@ -174,16 +174,16 @@ exports.getChatMessages = function() {
 	FROM users
 	JOIN chatmessages
 	ON users.id = sender_id
-	ORDER BY created_at ASC LIMIT 20
+	ORDER BY created_at ASC LIMIT 10
 	`;
     return db.query(q);
 };
 // ------------------------------------
-exports.newChatMessage = function(newMessage, userId) {
+exports.getSearchResult = function(userSearch) {
     const q = `
-	INSERT INTO chatmessages (sender_id, message)
-	VALUES ($2, $1)
-	RETURNING id as message_id, sender_id, message, created_at 
+	SELECT id, first, last, image
+	FROM users
+	WHERE first ILIKE $1 OR last ILIKE $1
 	`;
-    return db.query(q, [newMessage, userId]);
+    return db.query(q, [userSearch + "%"]);
 };

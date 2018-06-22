@@ -60,16 +60,23 @@ export default function(state = {}, action) {
     }
     // -------------------------------------
     if (action.type == "CHECK_FOR_MESSAGES") {
-        console.log(" reduser CHECK_FOR_MESSAGES", action.chatMessages);
+        // console.log(" reduser CHECK_FOR_MESSAGES", action.chatMessages);
         state = Object.assign({}, state, {
             chatMessages: action.chatMessages
         });
     }
     // -------------------------------------
     if (action.type == "NEW_CHAT_MESSAGE") {
-        console.log(" reduser NEW_CHAT_MESSAGE", action.newMessage);
+        // console.log(" reduser NEW_CHAT_MESSAGE", action.newMessage);
         state = Object.assign({}, state, {
             chatMessages: state.chatMessages.concat(action.newMessage)
+        });
+    }
+    // -------------------------------------
+    if (action.type == "GET_SEARCH_FOR_USER") {
+        // console.log(" reduser GET_SEARCH_FOR_USER", action.userSearch);
+        state = Object.assign({}, state, {
+            searchResults: action.searchResults
         });
     }
     return state;

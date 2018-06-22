@@ -88,12 +88,21 @@ export function checkForMessages(chatMessages) {
         chatMessages
     };
 }
-export function newChatMessage(newMessage) {
+// Search action creator ----------------------------------------
+export function getSearchForUser(userSearch) {
     // return "halo";
 
-    console.log("newChatMessage action", newMessage);
-    return {
-        type: "NEW_CHAT_MESSAGE",
-        newMessage
-    };
+    console.log("getSearchForUser action", userSearch);
+    return axios
+        .get(`/search?q=${encodeURIComponent(userSearch)}`)
+        .then(({ data }) => {
+            console.log("action axios", encodeURIComponent(userSearch), data);
+            return {
+                type: "GET_SEARCH_FOR_USER",
+                searchResults: data
+            };
+        })
+        .catch(err => {
+            console.log(err);
+        });
 }

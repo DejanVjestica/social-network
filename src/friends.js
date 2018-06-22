@@ -12,13 +12,11 @@ class Friends extends React.Component {
     constructor(props) {
         super(props);
     }
-    handleGoToProfile() {
-        console.log("handleGoToProfile");
-    }
+    // handleGoToProfile() {
+    //     console.log("handleGoToProfile");
+    // }
     // -------------------------------------
     render() {
-        console.log("friends", this.props.friends);
-        console.log("pending", Array.isArray(this.props.pending));
         // if (this.props.pending) {
         //     console.log("true", this.props.pending);
         // } else {
@@ -28,11 +26,12 @@ class Friends extends React.Component {
             <div className="friendList flexItem elementPadding">
                 <div className="pendingFriends">
                     {this.props.pending &&
-                        this.props.pending.length === 0 && (
-                            <header>
-                                <h4>Pending friends</h4>
-                            </header>
-                        )}
+                        this.props.pending.length !== 0 && (
+                            <h4>Pending friends</h4>
+                        )
+                    // console.log("friends", this.props.friends.length);
+                    // console.log("pending", this.props.pending.length);
+                    }
                     {this.props.pending &&
                         this.props.pending.map(pending => {
                             return (
@@ -58,23 +57,15 @@ class Friends extends React.Component {
                                     >
                                         accept
                                     </button>
-                                    {/* <a href=`/user/{pending.id}`></a> */}
-                                    {/* <a href={`/user/{$pending.id}`}>
-                                        go to profile
-                                    </a> */}
-                                    {/* <button onClick={this.handleGoToProfile}>
-                                        go to profile
-                                    </button> */}
                                 </div>
                             );
                         })}
                 </div>
                 <div className="currentFriends">
-                    {this.props.friends && (
-                        <header>
+                    {this.props.friends &&
+                        this.props.friends.length !== 0 && (
                             <h4>Current friends</h4>
-                        </header>
-                    )}
+                        )}
                     {this.props.friends &&
                         this.props.friends.map(friends => {
                             return (
