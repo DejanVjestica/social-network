@@ -60,7 +60,7 @@ class Register extends Component {
                 )}
 
                 <form onSubmit={this.onRegister} method="post">
-                    <h2>Please register</h2>
+                    <h2>Register new account</h2>
                     <input
                         type="text"
                         name="first"
