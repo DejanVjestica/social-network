@@ -2,7 +2,7 @@ import React from "react";
 // import ProfilePic from "./ProfilePic";
 import axios from "./axios";
 
-import ProfilePic from "./ProfilePic";
+import ProfilePic from "./components/ProfilePic";
 // import { Link } from "react-router-dom";
 
 class Profile extends React.Component {

@@ -1,27 +1,25 @@
-// import React from "react";
+// react --------------------------------
 import React, { Component } from "react";
 import { BrowserRouter, Link, Route } from "react-router-dom";
-import axios from "axios";
+// redux ----------------------------
+import { connect } from "react-redux";
+import { getLogedUser } from "./actions.js";
 
-import Logo from "./logo";
-import ProfilePic from "./ProfilePic";
+// import component -----------------------
+import NavBar from "./components/NavBar";
+
+import ProfilePic from "./components/ProfilePic";
 import Profile from "./Profile";
 import OtherPersonProfile from "./oop";
 import Uploader from "./Uploader";
 import Friends from "./friends";
 import Online from "./online";
 import Chat from "./chat";
-import Search from "./search";
 
 class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            first: "",
-            last: "",
-            userid: "",
-            image: "",
-            bio: "",
             uploaderIsVisible: false,
             setBioIsVisible: false
         };
@@ -31,25 +29,7 @@ class App extends Component {
         this.showSetBio = this.showSetBio.bind(this);
     }
     componentDidMount() {
-        axios
-            .get("/user")
-            .then(({ data }) => {
-                // console.log("componentDidMount data", data);
-                // console.log(this.state.firstName, this.state.lastName);
-                this.setState(
-                    {
-                        first: data.first,
-                        last: data.last,
-                        userid: data.id,
-                        image: data.image,
-                        bio: data.bio
-                    },
-                    () => {}
-                );
-            })
-            .catch(function(err) {
-                console.log(err);
-            });
+        this.props.dispatch(getLogedUser());
     }
     // Profile image component  -----------------
     showUploader() {
@@ -88,65 +68,44 @@ class App extends Component {
             <BrowserRouter>
                 <div id="app" className="row">
                     {/* ------------- header ----------------------- */}
-                    <header className="navbar col-12 bg-primary text-white navbar-dark nav-bar-expand  ">
-                        <div className="navbar-brand col-1 ">
-                            <Logo />
+                    <div className="w3-top">
+                        <div className="w3-bar w3-blue-grey w3-left-align w3-large">
+                            <NavBar />
                         </div>
-                        {/* <div className="form-inline col-9">
-                            <Search />
-                        </div> */}
-                        <div className="media col-1">
-                            <ProfilePic
-                                whenClick={this.showUploader}
-                                image={this.state.image}
-                                // setBioIsVisible={this.state.setBioIsVisible}
-                            />
-                            <Link className="media-body" to="/profile">
-                                <p className="text-white">{this.state.first}</p>
-                            </Link>
-                        </div>
-                    </header>
+                    </div>
+
                     {/* ------------- sidebar ----------------------- */}
-                    <aside className="col-3 appSidebar bg-secondary">
-                        <Link
-                            to="/profile"
-                            className="row col-12 sideBarUserInfo text-light"
-                        >
+                    <div className="">
+                        <Link to="/profile" className="">
                             <ProfilePic
-                                className="align-self-center"
+                                className=""
                                 whenClick={this.showUploader}
                                 image={this.state.image}
                                 // setBioIsVisible={this.state.setBioIsVisible}
                             />
-                            <p className="align-self-center padding-left">
+                            <p className="">
                                 {this.state.first} {this.state.last}
                             </p>
                         </Link>
 
-                        <div className="nav col-12 bg-light flex-column ">
+                        <div className="">
                             <Link to="/friends">
-                                <button className="dropdown-item">
-                                    Friends
-                                </button>
+                                <button className="">Friends</button>
                             </Link>
                             <Link to="/chat">
-                                <button className="dropdown-item">Chats</button>
+                                <button className="">Chats</button>
                             </Link>
                             <Link to="/online">
-                                <button className="dropdown-item">
-                                    Online Users
-                                </button>
+                                <button className="">Online Users</button>
                             </Link>
-                            <a className="dropdown-item" href="/logout">
+                            <a className="" href="/logout">
                                 Logout
                             </a>
                         </div>
-                        <div className="form-inline col-9">
-                            <Search />
-                        </div>
-                    </aside>
+                        <div className="">{/* <Search /> */}</div>
+                    </div>
                     {/* ------------- Routes ----------------------- */}
-                    <div className="main-content row col-9">
+                    <div className="">
                         <Route
                             path="/profile"
                             render={() => (
@@ -177,12 +136,6 @@ class App extends Component {
                         <Route path="/online" component={Online} />
                         <Route path="/chat" component={Chat} />
                     </div>
-                    {/* <Route
-                        path="/user/:id"
-                        render={() => (
-                            <OtherPersonProfile userId={this.state.id} />
-                        )}
-                    /> */}
 
                     {this.state.uploaderIsVisible && (
                         <Uploader setImage={this.setImage} />
@@ -192,4 +145,10 @@ class App extends Component {
         );
     }
 }
-export default App;
+const mapStateToProps = state => {
+    return {
+        // type: state.type,
+        logedUser: state.logedUser && state.logedUser
+    };
+};
+export default connect(mapStateToProps)(App);

@@ -45,9 +45,6 @@ class Login extends Component {
         return (
             <div className=" w3-container w3-display-middle w3-theme-d2 w3-padding-16">
                 <div className="w3-large w3-margin-bottom">Sign in</div>
-                {/* {location.pathname == "/welcome#/login" && (
-                    <Link to="/">Register</Link>
-                )} */}
                 {this.state.error && (
                     <div className="w3-margin-bottom err">
                         {" "}

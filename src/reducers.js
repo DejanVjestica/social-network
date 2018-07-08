@@ -38,6 +38,12 @@ export default function(state = {}, action) {
     }
     // -------------------------------------
     // -------------------------------------
+    if (action.type == "GET_LOGED_USER") {
+        // console.log(" reduser CHECK_FOR_ONLINE_USERS");
+        state = Object.assign({}, state, {
+            logedUser: action.logedUser
+        });
+    }
     if (action.type == "CHECK_FOR_ONLINE_USERS") {
         // console.log(" reduser CHECK_FOR_ONLINE_USERS");
         state = Object.assign({}, state, {

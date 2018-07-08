@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { getSearchForUser } from "./actions";
+import { getSearchForUser } from "../actions";
 
 class Search extends React.Component {
     constructor(props) {

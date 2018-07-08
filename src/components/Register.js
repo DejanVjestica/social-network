@@ -31,14 +31,9 @@ class Register extends Component {
         axios
             .post("/register", this.state)
             .then(resp => {
-                // location.replace("/");
-
-                // console.log(resp);
                 if (resp.data.success) {
-                    // console.log(this.state);
                     location.replace("/");
                 } else {
-                    // console.log("error");
                     this.setState({
                         error: true
                     });
@@ -54,12 +49,11 @@ class Register extends Component {
                 <div className="w3-large w3-margin-bottom">
                     Create your Account
                 </div>
-
-                {/* {location.pathname == "/welcome" && (
-                    <Link to="/login">Login</Link>
-                )} */}
                 {this.state.error && (
-                    <div className="err"> oops registration went wrong!</div>
+                    <div className="w3-margin-bottom err">
+                        {" "}
+                        oops registration went wrong!
+                    </div>
                 )}
 
                 <form onSubmit={this.onRegister} method="post">
@@ -101,11 +95,3 @@ class Register extends Component {
     }
 }
 export default Register;
-//
-
-//
-// function Registration() {
-//     //
-// 	return(
-// 	)
-// }

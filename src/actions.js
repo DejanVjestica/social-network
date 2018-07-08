@@ -1,5 +1,32 @@
 import axios from "./axios";
 
+// GET USER DATA ----------------------------
+export function getLogedUser() {
+    return axios
+        .get("/user")
+        .then(({ data }) => {
+            return {
+                type: "GET_LOGED_USER",
+                logedUser: data
+            };
+            // console.log("componentDidMount data", data);
+            // console.log(this.state.firstName, this.state.lastName);
+            // this.setState(
+            // 	{
+            // 		first: data.first,
+            // 		last: data.last,
+            // 		userid: data.id,
+            // 		image: data.image,
+            // 		bio: data.bio
+            // 	},
+            // 	() => {}
+            // );
+        })
+        .catch(function(err) {
+            console.log(err);
+        });
+}
+// FRIENDSHIP BUTTON ------------------------
 export function recieveFriendsAndWannabes() {
     // here comes axios request
     return axios
@@ -22,7 +49,7 @@ export function acceptRequest(senderId) {
         .post("/requestaccepted", {
             senderId: senderId
         })
-        .then(resp => {
+        .then(() => {
             // console.log("inside acceptRequest: ", resp.data);
             return {
                 type: "ACCEPT_REQUEST",
@@ -39,7 +66,7 @@ export function endFriendship(otherUserId) {
         .post("/deleterequest", {
             otherUserId: otherUserId
         })
-        .then(resp => {
+        .then(() => {
             // console.log("inside deleterequest: ", resp.data);
             return {
                 type: "DELETE_REQUEST",
@@ -51,6 +78,7 @@ export function endFriendship(otherUserId) {
         });
 }
 
+// SOCKET -------------------------------------------------
 // User has connected -------------------------------------
 export function checkForOnlineUsers(onlineUsers) {
     // return "halo";
