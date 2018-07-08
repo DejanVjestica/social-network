@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import axios from "./axios";
 import { Link } from "react-router-dom";
 
-// import axios from "axios";
+import axios from "../axios";
 
 class Register extends Component {
     constructor() {
@@ -51,42 +50,52 @@ class Register extends Component {
     }
     render() {
         return (
-            <div id="register">
-                {location.pathname == "/welcome" && (
+            <div className=" w3-container w3-display-middle w3-theme-d2 w3-padding-16">
+                <div className="w3-large w3-margin-bottom">
+                    Create your Account
+                </div>
+
+                {/* {location.pathname == "/welcome" && (
                     <Link to="/login">Login</Link>
-                )}
+                )} */}
                 {this.state.error && (
                     <div className="err"> oops registration went wrong!</div>
                 )}
 
                 <form onSubmit={this.onRegister} method="post">
-                    <h2>Register new account</h2>
                     <input
+                        className="w3-input w3-margin-bottom"
                         type="text"
                         name="first"
                         onChange={this.onChange}
                         placeholder="first Name"
                     />
                     <input
+                        className="w3-input w3-margin-bottom"
                         type="text"
                         name="last"
                         onChange={this.onChange}
                         placeholder="last Name"
                     />
                     <input
+                        className="w3-input w3-margin-bottom"
                         type="email"
                         name="email"
                         onChange={this.onChange}
                         placeholder="email"
                     />
                     <input
+                        className="w3-input"
                         type="password"
                         name="password"
                         onChange={this.onChange}
                         placeholder="password"
                     />
-                    <button>Register</button>
+                    <button className="w3-button w3-section w3-red w3-ripple">
+                        Register new Account
+                    </button>
                 </form>
+                <Link to="/login">Login</Link>
             </div>
         );
     }

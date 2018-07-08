@@ -113,14 +113,12 @@ app.post("/register", function(req, res) {
 });
 // ---------------------------------------------
 app.post("/login", function(req, res) {
-    // console.log("/login: ", req.body, req.body.email);
     db
         .getUserByEmail(req.body.email)
         .then(function(user) {
             return db
                 .checkPassword(req.body.password, user.rows[0].hash_password)
                 .then(function(doesMatch) {
-                    // console.log(req.body.password, user.rows[0].hash_password);
                     if (doesMatch) {
                         req.session.userId = user.rows[0].userid;
                         req.session.firstName = user.rows[0].firstName;
@@ -163,11 +161,9 @@ app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {
 });
 // ---------------------------------------------
 app.post("/uploadbio", function(req, res) {
-    // console.log("inside uploadbio ");
     db
         .updateBio(req.session.userId, req.body.bio)
         .then(function(data) {
-            // console.log("route uploadbio", req.session.userId, req.body.bio);
             res.json(data.rows[0]);
         })
         .catch(function(err) {
@@ -179,9 +175,7 @@ app.get("/user", (req, res) => {
     db
         .getUserById(req.session.userId)
         .then(user => {
-            // console.log(req.session.userid);
             res.json(user.rows[0]);
-            // console.log(user.rows);
         })
         .catch(err => {
             res.sendStatus(404);
@@ -200,9 +194,7 @@ app.get("/users/:id.json", (req, res) => {
     db
         .getUserById(req.params.id)
         .then(({ rows }) => {
-            //
             res.json(rows[0]);
-            // console.log(rows);
         })
         .catch(err => {
             res.sendStatus(404);
@@ -211,11 +203,9 @@ app.get("/users/:id.json", (req, res) => {
 });
 // User search ----------------------------------
 app.get(`/search`, (req, res) => {
-    console.log("inside server roure search", req.query.q);
     db
         .getSearchResult(req.query.q)
         .then(result => {
-            console.log(result.rows);
             res.json(result.rows);
         })
         .catch(err => {
@@ -226,17 +216,10 @@ app.get(`/search`, (req, res) => {
 // Friendships
 // ------------------------------------------------
 app.get("/friendships/:id.json", (req, res) => {
-    // console.log(
-    //     "in route friendships index.js: ",
-    //     req.session.userId,
-    //     req.params.id
-    // );
     db
         .checkFriendshipStatus(req.session.userId, req.params.id)
         .then(statusResult => {
-            // console.log("inside friendship route:", statusResult.rows[0]);
             res.json(statusResult.rows[0] || {});
-            // console.log("after check friend_:", statusResult);
         })
         .catch(err => {
             res.sendStatus(404);
@@ -249,7 +232,6 @@ app.post("/makerequest", (req, res) => {
     db
         .makeRequest(req.session.userId, req.body.recipientId)
         .then(data => {
-            // console.log("data rows:", data.rows[0]);
             res.json(data.rows[0] || {});
         })
         .catch(err => {
@@ -258,11 +240,9 @@ app.post("/makerequest", (req, res) => {
 });
 // accept request --------------------
 app.post("/requestaccepted", (req, res) => {
-    // console.log(req.body);
     db
         .requestAccepted(req.session.userId, req.body.senderId)
         .then(data => {
-            // console.log("data rows:", data.rows[0]);
             res.json(data.rows[0] || {});
         })
         .catch(err => {
@@ -274,41 +254,23 @@ app.post("/deleterequest", (req, res) => {
     db
         .cancelRequest(req.session.userId, req.body.otherUserId)
         .then(data => {
-            // console.log("data rows:", data.rows[0]);
             res.json(data.rows[0] || {});
         })
         .catch(err => {
             console.log(err);
         });
 });
-// Friends list
-
+// Friends list ---------------------------------------
 app.get("/friends.json", (req, res) => {
     db
         .getPendingAndFriends(req.session.userId)
         .then(data => {
-            // console.log("coming from request:", data.rows);
             res.json(data.rows);
         })
         .catch(err => {
             console.log(err);
         });
 });
-// app.get("/chat", (req, res) => {
-//     db
-//         .getChatMessages()
-//         .then(data => {
-//             console.log("inside route /chat", data.rows);
-//             res.json(data.rows);
-//         })
-//         .catch(err => {
-//             console.log("Inside route /chat, catch", err);
-//         });
-// });
-// // _________________________________________
-// _________________________________________
-// -----------------------------------------
-
 // --------------------------------------------------
 app.get("/welcome", (req, res) => {
     if (req.session.userId) {
@@ -317,17 +279,13 @@ app.get("/welcome", (req, res) => {
         res.sendFile(__dirname + "/index.html");
     }
 });
-// Always last route
 app.get("*", (req, res) => {
     if (!req.session.userId) {
-        // console.log("user not loged in, redirecting to welcome");
         res.redirect("/welcome");
     } else {
-        // console.log("user detected");
         res.sendFile(__dirname + "/index.html");
     }
 });
-
 // Server listens
 server.listen(8080, () => {
     console.log("I'm listening.");
@@ -344,10 +302,6 @@ io.on("connection", socket => {
     const userIds = Object.values(onlineUsers);
     onlineUsers[socket.id] = userId;
     chatMessages[socket.id] = userId;
-    console.log(`socket with the socket.id ${socket.id} is now connected`);
-    // console.log("ONLINEUSERS: ", onlineUsers, userIds);
-
-    // Check for online users ------------------------------------
     db
         .getUsersBeiIds(Object.values(onlineUsers))
         .then(({ rows }) => {
@@ -361,9 +315,7 @@ io.on("connection", socket => {
     db
         .getChatMessages()
         .then(({ rows }) => {
-            // console.log("inside chat", rows);
             socket.emit("chatMessages", rows);
-            // res.json(rows);
         })
         .catch(err => {
             console.log("Inside chat, catch", err);
@@ -371,8 +323,6 @@ io.on("connection", socket => {
     let count = Object.values(onlineUsers).filter(id => id == userId).length;
     if (count == 1) {
         db.getUserById(userId).then(({ rows }) => {
-            // console.log("after second query", rows);
-            // Broadcasting user joined --------------s
             socket.broadcast.emit("userJoined", rows);
         });
     }
@@ -380,25 +330,18 @@ io.on("connection", socket => {
     // ON NEW CHAT MESSAGE
     // -------------------------------------------------
     socket.on("chatMessage", newMessage => {
-        // const thisUserMessage = chatMessages[socket.id];
-        console.log("index on chatMessage", newMessage, userId);
         db
             .newChatMessage(newMessage, userId)
             .then(({ rows }) => {
-                console.log("chatMessage", rows);
-
                 db
                     .getUserById(rows[0].sender_id)
                     .then(data => {
                         let newMessage = Object.assign(rows[0], data.rows[0]);
-                        console.log("db query get User by id", newMessage);
                         io.sockets.emit("chatMessage", newMessage);
                     })
                     .catch(function(err) {
                         console.log("inside catcht chat message", err);
                     });
-                // Broadcasting user joined --------------s
-                // socket.broadcast.emit("userJoined", rows);
             })
             .catch(function(err) {
                 console.log("chatMessage catch", err);
@@ -409,13 +352,8 @@ io.on("connection", socket => {
     // DISCONECT
     // -------------------------------------------------
     socket.on("disconnect", function() {
-        console.log(
-            `socket with the socket.id ${socket.id} is now disconnected`
-        );
         const thisUserId = onlineUsers[socket.id];
-        // console.log("disconnect hapend", thisUserId, userId, onlineUsers);
         delete onlineUsers[socket.id];
-        // console.log("after delete", onlineUsers);
         let userIndex = userIds.indexOf(userId);
         userIds.splice(userIndex, 1);
 

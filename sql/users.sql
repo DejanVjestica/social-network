@@ -26,12 +26,7 @@ CREATE TABLE chatmessages(
 	message VARCHAR(350),
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
--- updated_at TIMESTAMP DEFAULT CURRENT_STAMP
--- SELECT status, resipient_id,sender_id
--- from friendships
--- where (status = 1 or sender_id =2)and
--- ((resipient_id = $1 and sender_id = $2)
--- or (resipient_id = $2 and sender_id = $1))
+
 INSERT INTO friendships (sender_id, recipient_id, status) VALUES (
     2,
 	3,

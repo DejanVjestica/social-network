@@ -1,10 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
-import axios from "./axios";
-
-// import Register from "./register";
-// import { HashRouter, Route } from "react-router-dom";
+import axios from "../axios";
 
 class Login extends Component {
     constructor() {
@@ -46,23 +43,37 @@ class Login extends Component {
     }
     render() {
         return (
-            <div>
-                <h2>Login</h2>
-                {location.pathname == "/login" && (
-                    <Link to="/welcome">Register</Link>
-                )}
+            <div className=" w3-container w3-display-middle w3-theme-d2 w3-padding-16">
+                <div className="w3-large w3-margin-bottom">Sign in</div>
+                {/* {location.pathname == "/welcome#/login" && (
+                    <Link to="/">Register</Link>
+                )} */}
                 {this.state.error && (
-                    <div className="err"> oops login went wrong!</div>
+                    <div className="w3-margin-bottom err">
+                        {" "}
+                        oops login went wrong!
+                    </div>
                 )}
                 <form onSubmit={this.onSubmit} method="post">
-                    <input type="email" name="email" onChange={this.onChange} />
                     <input
-                        type="password"
-                        name="password"
+                        className="w3-input w3-margin-bottom"
+                        type="email"
+                        name="email"
+                        placeholder="Email"
                         onChange={this.onChange}
                     />
-                    <button>Login</button>
+                    <input
+                        className="w3-input"
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        onChange={this.onChange}
+                    />
+                    <button className="w3-button w3-section w3-red w3-ripple">
+                        Sign in
+                    </button>
                 </form>
+                <Link to="/">Register</Link>
             </div>
         );
     }
