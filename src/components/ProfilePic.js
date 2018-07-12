@@ -1,4 +1,9 @@
 import React from "react";
+import { connect } from "react-redux";
+
+// Redux action creator
+// import { getLogedUser } from "../actions.js";
+
 // import Profile from "./Profile";
 // import { Component } from "react";
 // import { Component } from "react-ovject";
@@ -9,24 +14,33 @@ class ProfilePic extends React.Component {
         super(props);
         this.state = {};
     }
+    componentDidMount() {}
     render() {
-        // console.log("ProfilePic.js render profile image: ", this.props.image);
         return (
-            <div className="mr-3 mt-3 rounded-circle">
-                {!this.props.image && (
+            <React.Fragment>
+                {!this.props.logedUser.image && (
                     <img
+                        id="profileImg"
+                        className="w3-cell"
                         src="/images/default-profile-picture.jpg"
                         onClick={this.props.whenClick}
                     />
                 )}
-                {this.props.image && (
+                {this.props.logedUser.image && (
                     <img
-                        src={this.props.image}
+                        id="profileImg"
+                        className="w3-cell"
+                        src={this.props.logedUser.image}
                         onClick={this.props.whenClick}
                     />
                 )}
-            </div>
+            </React.Fragment>
         );
     }
 }
-export default ProfilePic;
+const mapStateToProps = state => {
+    return {
+        logedUser: state.logedUser && state.logedUser
+    };
+};
+export default connect(mapStateToProps)(ProfilePic);

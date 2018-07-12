@@ -1,7 +1,8 @@
 import React from "react";
-// import ProfilePic from "./ProfilePic";
-import axios from "./axios";
+import { connect } from "react-redux";
+import { getLogedUser } from "./actions.js";
 
+import axios from "./axios";
 import ProfilePic from "./components/ProfilePic";
 // import { Link } from "react-router-dom";
 
@@ -14,19 +15,15 @@ class Profile extends React.Component {
     }
     inputTextArea(e) {
         this[e.target.name] = e.target.value;
-        // console.log(e.target.value);
     }
     uploadBio() {
-        // e.preventDefault();
-        // console.log("before axios insige uploadImage", this.textarea);
         axios
             .post("/uploadbio", {
                 bio: this.textarea
             })
-            .then(({ data }) => {
-                this.props.setBio(data.bio);
-                // console.log("Inside uploadBio profile.js: ", this.bio);
-                // this.props.closeBio();
+            .then(() => {
+                // this.props.setBio(data.bio);
+                this.props.dispatch(getLogedUser());
             });
     }
     render() {
@@ -41,7 +38,7 @@ class Profile extends React.Component {
                     Welcome {this.props.first} {this.props.last}
                 </h1>
 
-                <p>{this.props.bio}</p>
+                <p>{this.props.logedUser.bio}</p>
 
                 {this.props.setBioIsVisible && (
                     <div>
@@ -57,11 +54,19 @@ class Profile extends React.Component {
 
                 {!this.props.setBioIsVisible && (
                     <button onClick={this.props.showSetBio}>
-                        {this.props.bio ? "Edit you bio" : "Add your bio now"}
+                        {this.props.logedUser.bio
+                            ? "Edit you bio"
+                            : "Add your bio now"}
                     </button>
                 )}
             </div>
         );
     }
 }
-export default Profile;
+const mapStateToProps = state => {
+    return {
+        // type: state.type,
+        logedUser: state.logedUser && state.logedUser
+    };
+};
+export default connect(mapStateToProps)(Profile);

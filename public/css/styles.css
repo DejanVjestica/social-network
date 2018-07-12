@@ -1,7 +1,16 @@
 /* ____________________________________________________ */
 /* ____________________________________________________ */
+body,
+a {
+    text-decoration: none;
+}
 #content {
     margin: 0 auto;
     margin-top: 43px;
     height: 500px;
+}
+#content #profileImg {
+    width: 35px;
+    height: 35px;
+    object-fit: fill;
 }
