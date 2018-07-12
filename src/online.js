@@ -1,7 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-// import { checkForOnlineUsers } from "./actions.js";
-
 class Online extends React.Component {
     constructor(props) {
         super(props);
@@ -26,13 +24,9 @@ class Online extends React.Component {
             </div>
         );
     }
-    componentDidMount() {
-        // this.props.dispatch(checkForOnlineUsers());
-    }
 }
 const mapStateToProps = state => {
     return {
-        // type: state.type,
         onlineUsers: state.onlineUsers && state.onlineUsers,
         pending:
             state.friendsList &&

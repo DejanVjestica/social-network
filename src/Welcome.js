@@ -3,10 +3,7 @@ import { HashRouter, Route } from "react-router-dom";
 import Register from "./components/register";
 import Login from "./components/login";
 import NavBar from "./components/NavBar";
-// let imgStyles = {
-//     width: "36px",
-//     height: "36px"
-// };
+
 // component ---------------------------
 class Welcome extends Component {
     render() {

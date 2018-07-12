@@ -9,18 +9,6 @@ export function getLogedUser() {
                 type: "GET_LOGED_USER",
                 logedUser: data
             };
-            // console.log("componentDidMount data", data);
-            // console.log(this.state.firstName, this.state.lastName);
-            // this.setState(
-            // 	{
-            // 		first: data.first,
-            // 		last: data.last,
-            // 		userid: data.id,
-            // 		image: data.image,
-            // 		bio: data.bio
-            // 	},
-            // 	() => {}
-            // );
         })
         .catch(function(err) {
             console.log(err);
@@ -28,11 +16,9 @@ export function getLogedUser() {
 }
 // FRIENDSHIP BUTTON ------------------------
 export function recieveFriendsAndWannabes() {
-    // here comes axios request
     return axios
         .get("/friends.json")
         .then(resp => {
-            // console.log("inside recieveFriendsAndWannabes: ", resp);
             return {
                 type: "RECIEVE_FRIENDS_AND_WANNABES",
                 friends: resp.data
@@ -43,14 +29,11 @@ export function recieveFriendsAndWannabes() {
         });
 }
 export function acceptRequest(senderId) {
-    // console.log("accept friendship", senderId);
-    // here comes axios request
     return axios
         .post("/requestaccepted", {
             senderId: senderId
         })
         .then(() => {
-            // console.log("inside acceptRequest: ", resp.data);
             return {
                 type: "ACCEPT_REQUEST",
                 senderId
@@ -61,13 +44,11 @@ export function acceptRequest(senderId) {
         });
 }
 export function endFriendship(otherUserId) {
-    // here comes axios request
     return axios
         .post("/deleterequest", {
             otherUserId: otherUserId
         })
         .then(() => {
-            // console.log("inside deleterequest: ", resp.data);
             return {
                 type: "DELETE_REQUEST",
                 otherUserId
@@ -81,8 +62,6 @@ export function endFriendship(otherUserId) {
 // SOCKET -------------------------------------------------
 // User has connected -------------------------------------
 export function checkForOnlineUsers(onlineUsers) {
-    // return "halo";
-    // console.log("checkForOnlineUsers action", onlineUsers);
     return {
         type: "CHECK_FOR_ONLINE_USERS",
         onlineUsers
@@ -90,7 +69,6 @@ export function checkForOnlineUsers(onlineUsers) {
 }
 // User has disconnected -------------------------------------
 export function userHasJoined(userJoined) {
-    // console.log("user has joined action", userJoined);
     return {
         type: "USER_HAS_JOINED",
         userJoined
@@ -98,9 +76,6 @@ export function userHasJoined(userJoined) {
 }
 // User has disconnected -------------------------------------
 export function userHasDisconected(userLeft) {
-    // return "halo";
-
-    // console.log("userDisconected action", userLeft);
     return {
         type: "USER_DISCONECTED",
         userLeft
@@ -108,9 +83,6 @@ export function userHasDisconected(userLeft) {
 }
 // User has disconnected -------------------------------------
 export function checkForMessages(chatMessages) {
-    // return "halo";
-
-    // console.log("checkForMessages action", chatMessages);
     return {
         type: "CHECK_FOR_MESSAGES",
         chatMessages
@@ -118,8 +90,6 @@ export function checkForMessages(chatMessages) {
 }
 // Search action creator ----------------------------------------
 export function getSearchForUser(userSearch) {
-    // return "halo";
-
     console.log("getSearchForUser action", userSearch);
     return axios
         .get(`/search?q=${encodeURIComponent(userSearch)}`)

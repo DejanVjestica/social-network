@@ -1,5 +1,8 @@
 /* ____________________________________________________ */
 /* ____________________________________________________ */
+.active {
+    display: block;
+}
 body,
 a {
     text-decoration: none;
@@ -9,8 +12,19 @@ a {
     margin-top: 43px;
     height: 500px;
 }
-#content #profileImg {
-    width: 35px;
-    height: 35px;
-    object-fit: fill;
+.profileImg {
+    width: 25px;
+    height: 25px;
+    object-fit: cover;
+}
+.w3-modal {
+    display: block;
+}
+.image-midd {
+    width: 300px;
+    height: auto;
+}
+.image-small {
+    width: 100px;
+    height: auto;
 }

@@ -346,7 +346,6 @@ io.on("connection", socket => {
             .catch(function(err) {
                 console.log("chatMessage catch", err);
             });
-        // store.dispatch(checkForMessages(userLeft));
     });
     // -------------------------------------------------
     // DISCONECT

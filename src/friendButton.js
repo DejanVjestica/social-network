@@ -12,7 +12,6 @@ class friendButton extends React.Component {
         this.makeRequest = this.makeRequest.bind(this);
         this.acceptRequest = this.acceptRequest.bind(this);
         this.deleteRequest = this.deleteRequest.bind(this);
-        // this.updateFriendshipStatus = this.updateFriendshipStatus.bind(this);
     }
 
     // request making methods ---------------------
@@ -44,6 +43,7 @@ class friendButton extends React.Component {
                 console.log(err);
             });
     }
+    // ------------------------------------------------------
     deleteRequest() {
         console.log("delete request button is clicked");
         axios
@@ -57,16 +57,13 @@ class friendButton extends React.Component {
                 console.log(err);
             });
     }
+    // ------------------------------------------------------
     getButtonText(data) {
-        // console.log("this is our data: ", data);
-        // const { status, recipientId: recipient_id } = data;
         const status = data.status;
         const recipientId = data.recipient_id;
         const senderId = data.sender_id;
-        // console.log("get button", status, recipientId, data);
         let buttonText, friendButtonIsClicked;
         if (status == 1) {
-            // console.log("is is status 1", status, recipientid);
             if (recipientId == this.props.otherUserId) {
                 buttonText = "Cancel Friend Request";
                 friendButtonIsClicked = this.deleteRequest;
@@ -80,8 +77,6 @@ class friendButton extends React.Component {
         } else {
             buttonText = "Make Friendship";
             friendButtonIsClicked = this.makeRequest;
-
-            // console.log("is is status 0", status, recipientid);
         }
         this.setState({
             status: status,
@@ -90,11 +85,9 @@ class friendButton extends React.Component {
             buttonText,
             friendButtonIsClicked
         });
-        // console.log(this.state.senderId);
     }
     // ------------------------------------------------------
     componentDidMount() {
-        // const id = this.props.match.params.id;
         const id = this.props.otherUserId;
         console.log("friend button comp mounted resipient_id is: ", id);
         axios
@@ -106,17 +99,9 @@ class friendButton extends React.Component {
             .catch(function(err) {
                 console.log("friend button catch:", err);
             });
-        // console.log(
-        //     "component did mpunt",
-        //     this.props.otherUserId,
-        //     this.props.senderUserId
-        // );
     }
+    // ------------------------------------------------------
     render() {
-        // if (this.state.recipientId == this.state.senderId) {
-        //     return null;
-        // } else {
-        // }
         return (
             <div>
                 <p>Status is: {this.state.status}</p>
@@ -125,7 +110,6 @@ class friendButton extends React.Component {
                 </button>
             </div>
         );
-        // console.log("friend button render: ", this.state);
     }
 }
 export default friendButton;

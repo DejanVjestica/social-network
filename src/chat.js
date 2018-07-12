@@ -2,23 +2,17 @@ import React from "react";
 import { connect } from "react-redux";
 import { emit } from "./socket";
 
-// console.log("inside chat componnent");
-
 class Chat extends React.Component {
     constructor(props) {
         super(props);
     }
     componentDidUpdate() {
-        // this.elem.scrollTop = this.elem.scrollHeight - this.elem.clientHeight;
-        // console.log("test", this.elem.clientHeight);
-        // console.log(this.elem.scrollHeight);
         this.elem.scrollTop = this.elem.scrollHeight;
     }
     componentDidMount() {
         this.elem.scrollTop = this.elem.scrollHeight;
     }
     render() {
-        // let val;
         return (
             <div className="chat">
                 <h4>Chat wall</h4>
@@ -47,7 +41,6 @@ class Chat extends React.Component {
                                         <time>{chatMessages.created_at}</time>
                                         <p>{chatMessages.message}</p>
                                     </div>
-                                    {/* <h5>{chatMessages.created_at}</h5> */}
                                 </div>
                             );
                         })}
@@ -77,23 +70,7 @@ class Chat extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        // type: state.type,
         chatMessages: state.chatMessages
     };
 };
 export default connect(mapStateToProps)(Chat);
-
-//
-// <div ref={elem => this.elem = elem} id="chat">
-// 	this.props.messages.map(
-// 		msg => <div key={}></div>
-// 	)
-// </div>
-// dateformating
-// let d =new Date("")
-// console.log(
-// 	d.toLocaleDateStrin(),
-// 	d.getDate(),
-// 	d.getMonth(),
-//
-// )

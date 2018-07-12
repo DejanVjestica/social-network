@@ -1,18 +1,13 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-// import Search from "./search";
 import ProfilePic from "./ProfilePic";
 
 class NavBar extends Component {
-    componentDidMount() {
-        // console.log();
-        // console.log(location.pathname);
-    }
+    componentDidMount() {}
     render() {
-        // let location = location;
         return (
             <React.Fragment>
-                <a href="/" className="w3-bar-item w3-light-grey ">
+                <a href="/" className="w3-bar-item w3-text-white ">
                     <i className="fa fa-home w3-margin-right" />Pet book
                 </a>
                 {location.pathname == "/welcome" && (
@@ -23,25 +18,16 @@ class NavBar extends Component {
                         Login
                     </Link>
                 )}
-                {location.pathname == "/" && (
+                {location.pathname != "/welcome" && (
                     <React.Fragment>
-                        {/* <div className=" w3-bar-item">
-                            <Search />
-                        </div> */}
-                        <a
-                            href="/logout"
-                            className="w3-bar-item w3-button w3-right "
-                        >
+                        <div className="w3-bar-item image-small w3-right ">
+                            <ProfilePic />
+                        </div>
+                        <a href="/logout" className="w3-bar-item w3-right ">
                             Logout
                         </a>
                     </React.Fragment>
                 )}
-                {/* <Link
-				to="/login"
-				className="w3-bar-item w3-button w3-padding w3-right"
-				>
-				Login
-			</Link> */}
             </React.Fragment>
         );
     }

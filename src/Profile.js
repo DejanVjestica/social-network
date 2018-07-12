@@ -4,12 +4,10 @@ import { getLogedUser } from "./actions.js";
 
 import axios from "./axios";
 import ProfilePic from "./components/ProfilePic";
-// import { Link } from "react-router-dom";
 
 class Profile extends React.Component {
     constructor(props) {
         super(props);
-        // this.state{}
         this.inputTextArea = this.inputTextArea.bind(this);
         this.uploadBio = this.uploadBio.bind(this);
     }
@@ -22,20 +20,22 @@ class Profile extends React.Component {
                 bio: this.textarea
             })
             .then(() => {
-                // this.props.setBio(data.bio);
                 this.props.dispatch(getLogedUser());
             });
     }
     render() {
         return (
-            <div className="profile">
-                <h3>Your profile details</h3>
-                <ProfilePic
-                    whenClick={this.props.whenClick}
-                    image={this.props.image}
-                />
+            <React.Fragment>
+                <div className="w3-large ">Your profile </div>
+                <div className="">
+                    <ProfilePic
+                        whenClick={this.props.whenClick}
+                        image={this.props.image}
+                    />
+                </div>
                 <h1>
-                    Welcome {this.props.first} {this.props.last}
+                    Welcome {this.props.logedUser.first}{" "}
+                    {this.props.logedUser.last}
                 </h1>
 
                 <p>{this.props.logedUser.bio}</p>
@@ -59,13 +59,12 @@ class Profile extends React.Component {
                             : "Add your bio now"}
                     </button>
                 )}
-            </div>
+            </React.Fragment>
         );
     }
 }
 const mapStateToProps = state => {
     return {
-        // type: state.type,
         logedUser: state.logedUser && state.logedUser
     };
 };

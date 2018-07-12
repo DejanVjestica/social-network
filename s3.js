@@ -1,10 +1,8 @@
 const knox = require("knox");
 const fs = require("fs");
-// const secrets = require("./secrets");
 let secrets;
-// console.log("secrets: ", secrets);
 if (process.env.NODE_ENV == "production") {
-    secrets = process.env; // in prod the secrets are environment variables
+    secrets = process.env;
 } else {
     secrets = require("./secrets"); // secrets.json is in .gitignore
 }
@@ -29,10 +27,8 @@ exports.upload = function(req, res, next) {
     readStream.pipe(s3Request);
 
     s3Request.on("response", s3Response => {
-        // const wasSuccessful = s3Response.statusCode == 200;
         console.log(s3Response.statusCode);
         if (s3Response.statusCode == 200) {
-            // fs.uplink(req.file.path, () => {});
             next();
         } else {
             console.log("in the respons something went wrong");

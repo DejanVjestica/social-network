@@ -33,25 +33,18 @@ class App extends Component {
     }
     // Profile image component  -----------------
     showUploader() {
-        // console.log("img is cliked");
         this.setState({
             uploaderIsVisible: !this.state.uploaderIsVisible
         });
-        // this.props.dispatch(getLogedUser());
-
-        console.log("show uploader:", this.props.logedUser.image);
     }
     setImage() {
-        // console.log("inside set image", singleimage);
         this.setState({
-            // image: image,
             uploaderIsVisible: false
         });
     }
     // ___________________________________________
     // Profile component --------------------
     showSetBio() {
-        // console.log("setBioIsVisible is cliked", this.state.setBioIsVisible);
         this.setState({
             setBioIsVisible: !this.state.setBioIsVisible
         });
@@ -61,7 +54,6 @@ class App extends Component {
             bio: bio,
             setBioIsVisible: false
         });
-        // console.log("setbio button is clicked", this.state.bio);
     }
 
     // ---------------------------------------------
@@ -69,7 +61,6 @@ class App extends Component {
         if (!this.props.logedUser || !this.props.logedUser.id) {
             return <div>Loading</div>;
         }
-        // console.log(this.props.logedUser);
         return (
             <BrowserRouter>
                 <div id="app" className="">
@@ -82,26 +73,26 @@ class App extends Component {
                     {/* ------------ MAIN CONTENT ------------------- */}
                     <div id="content" className="">
                         {/* -------------------------------------------------- */}
-                        <div className="w3-col m3 w3-light-blue w3-container w3-padding-24 w3-animate-left">
-                            <div className="w3-col">
+                        <div className="w3-col m3 w3-light-blue w3-animate-left">
+                            <div className="w3-container w3-display-container w3-margin-bottom w3-margin-top">
                                 {/* ----------- Profile component ----------------- */}
-                                <ProfilePic
-                                    whenClick={this.showUploader}
-                                    // image={this.props.logedUser.image}
-                                    // setBioIsVisible={this.state.setBioIsVisible}
-                                />
+                                <div className=" w3-cell w3-butt">
+                                    <ProfilePic
+                                        className=""
+                                        whenClick={this.showUploader}
+                                    />
+                                </div>
                                 {/* ----------- link to name ----------------- */}
                                 <Link
                                     to="/profile"
-                                    className="w3-cell-row w3-margin-bottom"
+                                    className="w3container w3-cell w3-display-middle"
                                 >
-                                    <div className=" ">
+                                    <div className=" w3-large">
                                         {this.props.logedUser.first}{" "}
                                         {this.props.logedUser.last}
                                     </div>
                                 </Link>
                             </div>
-                            {/* <div>{this.props.logedUser.bio}</div> */}
                             {/* ------------------------------------------------- */}
                             <div className="">
                                 <div className="w3-bar-block w3-blue">
@@ -121,21 +112,14 @@ class App extends Component {
                                         </button>
                                     </Link>
                                 </div>
-                                <div className="">{/* <Search /> */}</div>
                             </div>
                         </div>
                         {/* ------------- Routes ----------------------- */}
-                        <div className="w3-col m6 w3-container w3-pale-yellow">
+                        <div className="w3-container w3-col m6 w3-white w3-padding">
                             <Route
                                 path="/profile"
                                 render={() => (
                                     <Profile
-                                        // state properties ------
-                                        userId={this.state.id}
-                                        first={this.state.first}
-                                        last={this.state.last}
-                                        bio={this.state.bio}
-                                        image={this.state.image}
                                         setBioIsVisible={
                                             this.state.setBioIsVisible
                                         }
@@ -157,13 +141,13 @@ class App extends Component {
                             <Route path="/friends" component={Friends} />
                             <Route path="/online" component={Online} />
                             <Route path="/chat" component={Chat} />
+                            {this.state.uploaderIsVisible && (
+                                <div className="w3-modal w3-white w3-container ">
+                                    <Uploader setImage={this.setImage} />
+                                </div>
+                            )}
                         </div>
                     </div>
-                    {/* ------------- SIDEBAR ----------------------- */}
-
-                    {this.state.uploaderIsVisible && (
-                        <Uploader setImage={this.setImage} />
-                    )}
                 </div>
             </BrowserRouter>
         );
@@ -171,7 +155,6 @@ class App extends Component {
 }
 const mapStateToProps = state => {
     return {
-        // type: state.type,
         logedUser: state.logedUser && state.logedUser
     };
 };

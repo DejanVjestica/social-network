@@ -6,37 +6,24 @@ import {
     endFriendship
 } from "./actions.js";
 
-import { BrowserRouter, Link, Route } from "react-router-dom";
+import { Link } from "react-router-dom";
 class Friends extends React.Component {
     // -----------------------------------------
     constructor(props) {
         super(props);
     }
-    // handleGoToProfile() {
-    //     console.log("handleGoToProfile");
-    // }
     // -------------------------------------
     render() {
-        // if (this.props.pending) {
-        //     console.log("true", this.props.pending);
-        // } else {
-        //     console.log("false", this.props.friends);
-        // }
         return (
             <div className="friendList flexItem elementPadding">
                 <div className="pendingFriends">
                     {this.props.pending &&
                         this.props.pending.length !== 0 && (
                             <h4>Pending friends</h4>
-                        )
-                    // console.log("friends", this.props.friends.length);
-                    // console.log("pending", this.props.pending.length);
-                    }
+                        )}
                     {this.props.pending &&
                         this.props.pending.map(pending => {
                             return (
-                                // <div>{pending.first}</div>
-
                                 <div
                                     className="pendingFriend "
                                     key={pending.id}
@@ -69,8 +56,6 @@ class Friends extends React.Component {
                     {this.props.friends &&
                         this.props.friends.map(friends => {
                             return (
-                                // <div>{pending.first}</div>
-
                                 <div
                                     className="currentFriend "
                                     key={friends.id}
@@ -96,9 +81,6 @@ class Friends extends React.Component {
             </div>
         );
     }
-    // {this.props.pending && this.props.pending.map(pending =>{
-    //
-    // })}
     // ----------------------------------
     componentDidMount() {
         this.props.dispatch(recieveFriendsAndWannabes());
@@ -107,7 +89,6 @@ class Friends extends React.Component {
 // -------------------------------------------------
 const mapStateToProps = state => {
     return {
-        // type: state.type,
         pending:
             state.friendsList &&
             state.friendsList.filter(friend => friend.status == 1),

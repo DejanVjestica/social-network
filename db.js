@@ -102,7 +102,6 @@ module.exports.updateBio = function updateBio(id, bio) {
 };
 // Check friendship status ----------------------------------------
 exports.checkFriendshipStatus = function(senderId, recipientId) {
-    // console.log("inside db,check frieendship", senderId, recipientId);
     return db.query(
         `
 		SELECT sender_id, recipient_id, status
@@ -124,7 +123,6 @@ exports.makeRequest = function(sender_id, recipient_id) {
     );
 };
 exports.requestAccepted = function(senderId, recipientId) {
-    // console.log(senderId, recipientId);
     return db.query(
         `
 		UPDATE friendships
