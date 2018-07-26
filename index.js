@@ -11,6 +11,7 @@ const cookieSession = require("cookie-session");
 const bodyParser = require("body-parser");
 const csurf = require("csurf");
 const pathPublic = "public";
+// ---------------------------------------------------------
 const db = require("./db");
 // Amazon web services s3 ---------------------------------------
 const s3 = require("./s3");
@@ -293,55 +294,92 @@ server.listen(8080, () => {
 
 // io socket --------------------------------------
 let onlineUsers = {};
-let chatMessages = {};
+// let chatMessages = {};
+// -------------------------------
 io.on("connection", socket => {
+    // -------------------------------
     if (!socket.request.session || !socket.request.session.userId) {
         return socket.disconnect(true);
     }
+    // -------------------------------
     const userId = socket.request.session.userId;
-    const userIds = Object.values(onlineUsers);
-    onlineUsers[socket.id] = userId;
-    chatMessages[socket.id] = userId;
+    const socketId = socket.id;
+    // -------------------------------
+    let userIds = Object.values(onlineUsers);
+    // -------------------------------
+    onlineUsers[socketId] = userId;
+    // chatMessages[socketId] = userId;
+    // console.log("chatMessages:", chatMessages, "onlineUsers:", onlineUsers);
+    // console.log("userId: ", userId);
+
+    // check for online users -------------------------------
     db
-        .getUsersBeiIds(Object.values(onlineUsers))
+        .getUsersBeiIds(userIds)
         .then(({ rows }) => {
+            console.log("1: then get getUserById: ");
             // Emit online users ----------------------------
             socket.emit("onlineUsers", rows);
         })
         .catch(err => {
             console.log("Inside route /chat, catch", err);
         });
+    // ------------------------------------------------------------
     // Checks for Chat messages ------------------------------------
+    // ---------------------------------------------
     db
         .getChatMessages()
         .then(({ rows }) => {
+            console.log("1: then get getUserById:");
             socket.emit("chatMessages", rows);
         })
         .catch(err => {
             console.log("Inside chat, catch", err);
         });
+    // ---------------------------------------------
+    // broadcast userJoind
+    // ---------------------------------------------
     let count = Object.values(onlineUsers).filter(id => id == userId).length;
     if (count == 1) {
-        db.getUserById(userId).then(({ rows }) => {
-            socket.broadcast.emit("userJoined", rows);
-        });
+        db
+            .getUserById(userId)
+            .then(({ rows }) => {
+                socket.broadcast.emit("userJoined", rows[0]);
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }
     // -------------------------------------------------
     // ON NEW CHAT MESSAGE
     // -------------------------------------------------
-    socket.on("chatMessage", newMessage => {
+    socket.on("newChatMessage", message => {
+        console.log("1: on.chatMessage");
+        // console.log("on.chatMessage", message);
         db
-            .newChatMessage(newMessage, userId)
-            .then(({ rows }) => {
-                db
-                    .getUserById(rows[0].sender_id)
-                    .then(data => {
-                        let newMessage = Object.assign(rows[0], data.rows[0]);
-                        io.sockets.emit("chatMessage", newMessage);
-                    })
-                    .catch(function(err) {
-                        console.log("inside catcht chat message", err);
+            .newChatMessage(userId, message)
+            .then(message => {
+                console.log("2: INSIDE chatMessage, first then: rows");
+                return db
+                    .getUserById(message.rows[0].sender_id)
+                    .then(({ rows }) => {
+                        // let newMessage = Object.assign(rows[0], data.rows[0]);
+                        console.log("3: INSIDE then rows message: ");
+                        rows[0].user_id = rows[0].id;
+                        rows[0].id = message.rows[0].id;
+                        rows[0].message = message.rows[0].message;
+                        rows[0].created_at = message.rows[0].created_at;
+                        let newMessage = rows[0];
+                        console.log("3: then newMessage: ");
+                        // io.sockets.emit("newChatMessage", newMessage);
+                        // io.emit("newChatMessage", newMessage);
+                        socket.emit("chatMessage", newMessage);
+
+                        // io.sockets.emit("newMessage", rows[0]);
+                        // console.log("NEW OBJECT: ", rows[0]);
                     });
+                // .catch(function(err) {
+                // 	console.log("inside catch chatMessage: ", err);
+                // });
             })
             .catch(function(err) {
                 console.log("chatMessage catch", err);

@@ -8,7 +8,7 @@ class Online extends React.Component {
         return (
             <div className="onlineUsers wrapper">
                 <header>
-                    <h4>Online now</h4>
+                    <div>Online now</div>
                 </header>
                 {this.props.onlineUsers &&
                     this.props.onlineUsers.map(onlineUsers => {

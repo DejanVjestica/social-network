@@ -7,6 +7,9 @@ body,
 a {
     text-decoration: none;
 }
+img {
+    max-width: 50px;
+}
 #content {
     margin: 0 auto;
     margin-top: 43px;

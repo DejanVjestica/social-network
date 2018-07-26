@@ -58,36 +58,55 @@ export function endFriendship(otherUserId) {
             console.log("deleteFriendship catch", err);
         });
 }
-
+// --------------------------------------------------------
 // SOCKET -------------------------------------------------
-// User has connected -------------------------------------
+// socket.emit("onlineUsers", rows); ----------------------
 export function checkForOnlineUsers(onlineUsers) {
+    console.log("action emit onlineUsers", onlineUsers);
+    console.log("1: action checkForOnlineUsers");
     return {
         type: "CHECK_FOR_ONLINE_USERS",
         onlineUsers
     };
 }
-// User has disconnected -------------------------------------
-export function userHasJoined(userJoined) {
-    return {
-        type: "USER_HAS_JOINED",
-        userJoined
-    };
-}
-// User has disconnected -------------------------------------
-export function userHasDisconected(userLeft) {
-    return {
-        type: "USER_DISCONECTED",
-        userLeft
-    };
-}
-// User has disconnected -------------------------------------
+// ----------------------------------------------------------
+// socket.emit("chatMessages", rows); ---------------------
 export function checkForMessages(chatMessages) {
+    console.log("2: action emit chatMessages", chatMessages);
+
     return {
         type: "CHECK_FOR_MESSAGES",
         chatMessages
     };
 }
+// ------------------------------------------------------------
+export function newChatMessage(newMessage) {
+    console.log("3: action emit newChatMessage", newMessage);
+    return {
+        type: "NEW_CHAT_MESSAGE",
+        newMessage
+    };
+}
+// ----------------------------------------------------------
+// socket.broadcast.emit("userJoined", rows); --------------
+export function userHasJoined(userJoined) {
+    console.log("4: action emit userHasJoined", userJoined);
+
+    return {
+        type: "USER_HAS_JOINED",
+        userJoined
+    };
+}
+// ----------------------------------------------------------
+// io.sockets.emit("userLeft", thisUserId); ---------------
+export function userHasDisconected(userLeft) {
+    console.log("5: action emit userHasDisconected", userLeft);
+    return {
+        type: "USER_DISCONECTED",
+        userLeft
+    };
+}
+// ------------------------------------------------------------
 // Search action creator ----------------------------------------
 export function getSearchForUser(userSearch) {
     console.log("getSearchForUser action", userSearch);

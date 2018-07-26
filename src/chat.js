@@ -10,43 +10,45 @@ class Chat extends React.Component {
         this.elem.scrollTop = this.elem.scrollHeight;
     }
     componentDidMount() {
+        console.log("inside chats.js componentDidMount");
         this.elem.scrollTop = this.elem.scrollHeight;
     }
     render() {
         return (
-            <div className="chat">
-                <h4>Chat wall</h4>
+            <React.Fragment>
+                <div className="w3-large w3-margin-bottom">Chat wall</div>
+                <div className="w3-margin-bottom">Latest posts:</div>
                 <div
-                    className="chatMessageContainer"
+                    className=" w3-margin-bottom"
                     ref={elem => {
                         this.elem = elem;
                     }}
                 >
                     {this.props.chatMessages &&
-                        this.props.chatMessages.map(chatMessages => {
+                        this.props.chatMessages.map(chatMessage => {
                             return (
                                 <div
-                                    className="media"
-                                    key={chatMessages.message_id}
+                                    className="w3-border w3-container w3-padding"
+                                    key={chatMessage.message_id}
                                 >
                                     <img
                                         className="mr-3"
-                                        src={chatMessages.image}
+                                        src={chatMessage.image}
                                     />
                                     <div className="media-body">
                                         <h5>
-                                            {chatMessages.first}{" "}
-                                            {chatMessages.last}
+                                            {chatMessage.first}{" "}
+                                            {chatMessage.last}
                                         </h5>
-                                        <time>{chatMessages.created_at}</time>
-                                        <p>{chatMessages.message}</p>
+                                        <time>{chatMessage.created_at}</time>
+                                        <p>{chatMessage.message}</p>
                                     </div>
                                 </div>
                             );
                         })}
                 </div>
                 <div>
-                    <h3>testing</h3>
+                    {/* <div>testing</div> */}
                     <textarea
                         ref={elem => {
                             this.textarea = elem;
@@ -56,14 +58,14 @@ class Chat extends React.Component {
                     />
                     <button
                         onClick={() => {
-                            emit("chatMessage", this.textarea.value);
+                            emit("newChatMessage", this.textarea.value);
                             this.textarea.value = "Write a message";
                         }}
                     >
                         Submit
                     </button>
                 </div>
-            </div>
+            </React.Fragment>
         );
     }
 }

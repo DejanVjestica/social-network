@@ -166,7 +166,19 @@ exports.getUsersBeiIds = function(arrayOfIds) {
     return db.query(query, [arrayOfIds]);
 };
 // ------------------------------------
+exports.newChatMessage = function(sender_id, message) {
+    return db.query(
+        `
+		INSERT INTO chatmessages ( sender_id, message)
+		VALUES ($1, $2)
+		RETURNING id, sender_id, message, created_at
+		`,
+        [sender_id, message || null]
+    );
+};
+// ------------------------------------
 exports.getChatMessages = function() {
+    // console.log("getChatMessage");
     const q = `
 	SELECT users.id as sender_id, first, last, image, message, chatmessages.id as message_id, chatmessages.created_at
 	FROM users

@@ -29,6 +29,7 @@ class App extends Component {
         this.showSetBio = this.showSetBio.bind(this);
     }
     componentDidMount() {
+        console.log("inside app.js, componentDidMount");
         this.props.dispatch(getLogedUser());
     }
     // Profile image component  -----------------
@@ -72,30 +73,30 @@ class App extends Component {
                     </div>
                     {/* ------------ MAIN CONTENT ------------------- */}
                     <div id="content" className="">
-                        {/* -------------------------------------------------- */}
-                        <div className="w3-col m3 w3-light-blue w3-animate-left">
+                        {/* ------------------ Sidebar --------------------- */}
+                        <div className="w3-third w3-light-blue w3-animate-left">
                             <div className="w3-container w3-display-container w3-margin-bottom w3-margin-top">
-                                {/* ----------- Profile component ----------------- */}
-                                <div className=" w3-cell w3-butt">
+                                {/* ----------- Profile avatar ----------------- */}
+                                <div
+                                    className="w3-col w3-margin-right"
+                                    style={{ width: 20 + "px" }}
+                                >
                                     <ProfilePic
                                         className=""
                                         whenClick={this.showUploader}
                                     />
                                 </div>
-                                {/* ----------- link to name ----------------- */}
-                                <Link
-                                    to="/profile"
-                                    className="w3container w3-cell w3-display-middle"
-                                >
-                                    <div className=" w3-large">
+                                {/* ----------- link to edit profile ----------------- */}
+                                <Link to="/profile" className="w3-rest">
+                                    <div className="w3- w3-large">
                                         {this.props.logedUser.first}{" "}
                                         {this.props.logedUser.last}
                                     </div>
                                 </Link>
                             </div>
-                            {/* ------------------------------------------------- */}
+                            {/* ----------------- Sidebar menu -------------- */}
                             <div className="">
-                                <div className="w3-bar-block w3-blue">
+                                <div className="w3-coll w3-bar-block w3-blue">
                                     <Link to="/friends">
                                         <button className="w3-bar-item w3-button">
                                             Friends
@@ -114,8 +115,8 @@ class App extends Component {
                                 </div>
                             </div>
                         </div>
-                        {/* ------------- Routes ----------------------- */}
-                        <div className="w3-container w3-col m6 w3-white w3-padding">
+                        {/* ------------- Main content ----------------------- */}
+                        <div className="w3-rest w3-white w3-padding">
                             <Route
                                 path="/profile"
                                 render={() => (
