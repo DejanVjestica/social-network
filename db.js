@@ -180,7 +180,9 @@ exports.newChatMessage = function(sender_id, message) {
 exports.getChatMessages = function() {
     // console.log("getChatMessage");
     const q = `
-	SELECT users.id as sender_id, first, last, image, message, chatmessages.id as message_id, chatmessages.created_at
+	SELECT users.id as sender_id, first, last,
+	image, message, chatmessages.id as message_id,
+	chatmessages.created_at
 	FROM users
 	JOIN chatmessages
 	ON users.id = sender_id
@@ -191,7 +193,7 @@ exports.getChatMessages = function() {
 // ------------------------------------
 exports.getSearchResult = function(userSearch) {
     const q = `
-	SELECT id, first, last, image
+	SELECT id as message_id, first, last, image
 	FROM users
 	WHERE first ILIKE $1 OR last ILIKE $1
 	`;

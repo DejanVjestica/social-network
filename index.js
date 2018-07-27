@@ -316,7 +316,7 @@ io.on("connection", socket => {
     db
         .getUsersBeiIds(userIds)
         .then(({ rows }) => {
-            console.log("1: then get getUserById: ");
+            // console.log("1: then get getUserById: ");
             // Emit online users ----------------------------
             socket.emit("onlineUsers", rows);
         })
@@ -329,7 +329,7 @@ io.on("connection", socket => {
     db
         .getChatMessages()
         .then(({ rows }) => {
-            console.log("1: then get getUserById:");
+            console.log("1: then get getChatMessages:", rows);
             socket.emit("chatMessages", rows);
         })
         .catch(err => {
@@ -353,26 +353,41 @@ io.on("connection", socket => {
     // ON NEW CHAT MESSAGE
     // -------------------------------------------------
     socket.on("newChatMessage", message => {
-        console.log("1: on.chatMessage");
+        // console.log("1: on.chatMessage");
         // console.log("on.chatMessage", message);
         db
             .newChatMessage(userId, message)
             .then(message => {
-                console.log("2: INSIDE chatMessage, first then: rows");
+                // console.log(
+                //     "2: after newChatMessage, message",
+                //     message.rows[0]
+                // );
                 return db
                     .getUserById(message.rows[0].sender_id)
                     .then(({ rows }) => {
-                        // let newMessage = Object.assign(rows[0], data.rows[0]);
-                        console.log("3: INSIDE then rows message: ");
-                        rows[0].user_id = rows[0].id;
-                        rows[0].id = message.rows[0].id;
-                        rows[0].message = message.rows[0].message;
-                        rows[0].created_at = message.rows[0].created_at;
-                        let newMessage = rows[0];
-                        console.log("3: then newMessage: ");
+                        // console.log("3: after getUserById: ", rows[0]);
+                        const newMessage = {
+                            sender_id: message.rows[0].sender_id,
+                            first: rows[0].first,
+                            last: rows[0].last,
+                            image: rows[0].image,
+                            message: message.rows[0].message,
+                            message_id: message.rows[0].id,
+                            created_at: message.rows[0].created_at
+                        };
+                        // let newMessage = Object.assign(
+                        //     rows[0],
+                        //     message.rows[0]
+                        // );
+                        // rows[0].user_id = rows[0].id;
+                        // rows[0].id = message.rows[0].id;
+                        // rows[0].message = message.rows[0].message;
+                        // rows[0].created_at = message.rows[0].created_at;
+                        // let newMessage = rows[0];
+                        console.log("4: then newMessage: ", newMessage);
                         // io.sockets.emit("newChatMessage", newMessage);
                         // io.emit("newChatMessage", newMessage);
-                        socket.emit("chatMessage", newMessage);
+                        io.sockets.emit("chatMessage", newMessage);
 
                         // io.sockets.emit("newMessage", rows[0]);
                         // console.log("NEW OBJECT: ", rows[0]);
